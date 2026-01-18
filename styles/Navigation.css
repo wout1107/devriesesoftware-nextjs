@@ -1,0 +1,426 @@
+/* Vertical Navigation - ENHANCED COLORS */
+.vertical-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: linear-gradient(180deg, #424633 0%, #353a28 100%);
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+  z-index: 1000;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+  overflow-y: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Brand Logo - ORIGINELE KLEUREN */
+.nav-brand {
+  padding: 0 2rem;
+  margin-bottom: 2.5rem; /* Slightly reduced */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.nav-logo {
+  height: 70px; /* Slightly bigger */
+  width: auto;
+  object-fit: contain;
+  /* NO FILTER - Original colors preserved */
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.nav-logo:hover {
+  /* Keep original colors on hover, only add subtle shadow */
+  filter: drop-shadow(0 6px 20px rgba(255, 107, 0, 0.4));
+  transform: scale(1.05);
+}
+
+/* Decorative Line under Logo */
+.nav-brand::after {
+  content: "";
+  position: absolute;
+  bottom: -1.25rem; /* Adjusted */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent),
+    transparent
+  );
+  border-radius: 10px;
+  animation: lineGlow 2s ease-in-out infinite;
+}
+
+@keyframes lineGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(255, 107, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 107, 0, 0.8);
+  }
+}
+
+/* Navigation Links */
+.nav-links {
+  flex: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.nav-links li {
+  position: relative;
+}
+
+.nav-links a {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.125rem 2rem;
+  color: rgba(255, 255, 255, 0.95); /* Verhoogd contrast */
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 500;
+  font-family: var(--font-heading);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-links a::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--color-accent);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff; /* Pure wit voor hover */
+  padding-left: 2.5rem;
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.nav-links a:hover::before {
+  transform: scaleY(1);
+}
+
+.nav-links .active a {
+  background: rgba(255, 107, 0, 0.2);
+  color: #ffffff; /* Pure wit voor actieve link */
+  border-left: 4px solid var(--color-accent);
+  padding-left: calc(2rem - 4px);
+  font-weight: 600;
+}
+
+/* Icon Animation */
+.nav-links a svg {
+  min-width: 22px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.nav-links a:hover svg,
+.nav-links li.active a svg {
+  transform: scale(1.15) rotate(5deg);
+  color: var(--color-accent);
+  filter: drop-shadow(0 2px 8px rgba(255, 107, 0, 0.5));
+}
+
+.nav-links li.active a svg {
+  color: var(--color-accent);
+}
+
+/* Footer - Social Links - MODERN */
+.nav-footer {
+  padding: 0 2rem;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+}
+
+.nav-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-accent),
+    transparent
+  );
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.social-links a {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.95); /* Verhoogd contrast */
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.05rem;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.social-links a::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: var(--color-accent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+  z-index: -1;
+}
+
+.social-links a:hover,
+.social-links a:focus-visible {
+  color: #ffffff; /* Pure wit voor hover */
+  border-color: var(--color-accent);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.social-links a:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+/* Mobile Toggle Button - EYE-CATCHING */
+.mobile-toggle {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1001;
+  background: linear-gradient(135deg, #424633, #353a28); /* Updated */
+  color: var(--color-white);
+  border: 2px solid rgba(255, 107, 0, 0.3);
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(66, 70, 51, 0.4); /* Updated */
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 0 0 rgba(255, 107, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3), 0 0 0 10px rgba(255, 107, 0, 0);
+  }
+}
+
+.mobile-toggle:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 10px 30px rgba(255, 107, 0, 0.5);
+}
+
+.mobile-toggle:active {
+  transform: scale(0.95) rotate(90deg);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .mobile-toggle {
+    display: flex;
+  }
+
+  .vertical-nav {
+    width: 280px; /* mobile kleinere breedte */
+    transform: translateX(-100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .vertical-nav.open {
+    transform: translateX(0);
+  }
+
+  .nav-logo {
+    height: 60px; /* Smaller on mobile */
+  }
+
+  .nav-brand {
+    margin-bottom: 2rem;
+  }
+
+  .nav-brand::after {
+    bottom: -1rem;
+  }
+
+  .nav-links a {
+    padding: 1rem 1.25rem;
+  }
+
+  .vertical-nav {
+    overflow: hidden !important;
+  }
+}
+
+/* Backdrop behind the nav on mobile when open */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5); /* 👈 AANGEPAST - Donkerder backdrop */
+  z-index: 999; /* under the nav (1000), above content */
+  backdrop-filter: blur(4px); /* 👈 NIEUW - Blur effect */
+}
+
+/* Mobile: full-screen drawer overlay */
+@media (max-width: 768px) {
+  .vertical-nav {
+    width: 100vw; /* full screen */
+    height: 100vh; /* full screen */
+    left: 0;
+    top: 0;
+    transform: translateX(-100%);
+    /* 👇 NIEUW - Zorg dat nav boven alles staat */
+    z-index: 1000;
+  }
+  .vertical-nav.open {
+    transform: translateX(0);
+  }
+
+  /* Ensure nav content doesn't scroll on mobile either */
+  .nav-links {
+    overflow: visible !important;
+  }
+
+  /* 👇 NIEUW - Mobile toggle moet ook boven backdrop */
+  .mobile-toggle {
+    z-index: 1001 !important;
+  }
+
+  /* 👇 NIEUW - Backdrop moet onder nav maar boven content */
+  .nav-backdrop {
+    z-index: 999 !important;
+  }
+}
+
+/* Subtle Particles Effect */
+.vertical-nav::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 107, 0, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      rgba(255, 107, 0, 0.03) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, 0.02) 0%,
+      transparent 50%
+    );
+  animation: particleFloat 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes particleFloat {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+  }
+}
+
+/* Remove all scrollbars from vertical-nav */
+/* === NAV: nooit scrollbaar, ook niet op mobiel === */
+.vertical-nav {
+  overflow: hidden !important;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.vertical-nav::-webkit-scrollbar {
+  display: none;
+}
+
+/* Links-sectie niet scrollbaar maken */
+.nav-links {
+  overflow: visible !important;
+}
+
+/* Logo: geen animatie/hover-effecten */
+.nav-logo {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+.nav-logo:hover {
+  transform: none !important;
+}

@@ -13,10 +13,9 @@
   --color-white: #f4f8f5;
   --color-light-gray: #e5f0ea;
 
-  /* Typografie - next/font/google injects these as CSS variables via className */
-  /* Fallback values for when the font vars aren't loaded yet */
-  --font-heading-fallback: "Poppins", sans-serif;
-  --font-body-fallback: "Inter", sans-serif;
+  /* Typografie */
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
 
   /* Spacing */
   --spacing-xs: 0.5rem;
@@ -47,7 +46,7 @@ html {
 }
 
 body {
-  font-family: var(--font-body), var(--font-body-fallback);
+  font-family: var(--font-body);
   color: var(--color-text);
   background-color: #f7faf8;
   line-height: 1.6;
@@ -125,7 +124,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-heading), var(--font-heading-fallback);
+  font-family: var(--font-heading);
   font-weight: 700;
   color: var(--color-primary);
   line-height: 1.2;

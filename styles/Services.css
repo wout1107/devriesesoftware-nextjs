@@ -1,0 +1,371 @@
+/* Services Page - Kleurrijk & Strak volgens Huisstijl - OPTIMIZED */
+.services-page {
+  min-height: 100vh;
+  padding: 3rem 2rem; /* Reduced padding */
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.services-header {
+  text-align: center;
+  margin-bottom: 3rem; /* Reduced from spacing-xl */
+  padding-top: 1rem; /* Reduced */
+}
+
+.services-header h1 {
+  margin-bottom: 0.75rem; /* Reduced */
+  color: var(--color-primary);
+}
+
+.services-header p {
+  font-size: 1.15rem; /* Slightly smaller */
+  color: var(--color-text);
+  opacity: 0.85;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Services Grid - OPTIMIZED: Better space usage */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; /* Reduced gap for more content space */
+  margin-bottom: 3rem; /* Reduced */
+}
+
+.service-card-new {
+  background: var(--color-white);
+  padding: 2rem 1.75rem; /* Slightly reduced padding */
+  border-radius: 16px; /* Slightly smaller radius */
+  border: 2px solid var(--color-light-gray);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+}
+
+.service-card-new::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px; /* Slightly thinner */
+  background: var(--service-color);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: var(--transition);
+}
+
+.service-card-new:hover::before {
+  transform: scaleX(1);
+}
+
+.service-card-new:hover {
+  border-color: var(--service-color);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px); /* Slightly reduced */
+}
+
+.service-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Reduced gap */
+  margin-bottom: 1.25rem; /* Reduced */
+}
+
+.service-icon-new {
+  width: 55px; /* Slightly smaller */
+  height: 55px;
+  border-radius: 12px; /* Smaller radius */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.service-card-new:hover .service-icon-new {
+  transform: rotate(-5deg) scale(1.08);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.service-header h3 {
+  font-size: 1.35rem; /* Slightly smaller */
+  color: var(--color-primary);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.service-description {
+  color: var(--color-text);
+  font-size: 0.95rem; /* Slightly smaller */
+  line-height: 1.5;
+  margin-bottom: 1.25rem; /* Reduced */
+  opacity: 0.85;
+}
+
+.service-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-light-gray),
+    transparent
+  );
+  margin: 1.25rem 0; /* Reduced */
+}
+
+.features-title-small {
+  font-size: 0.875rem; /* Smaller */
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.875rem; /* Reduced */
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.service-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem; /* Reduced gap */
+  flex: 1; /* Take remaining space */
+}
+
+.service-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem; /* Reduced gap */
+  color: var(--color-text);
+  font-size: 0.875rem; /* Smaller font */
+  line-height: 1.4;
+}
+
+.service-features li svg {
+  color: var(--color-accent);
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  width: 16px; /* Slightly smaller icons */
+  height: 16px;
+}
+
+.service-card-new:hover .service-features li svg {
+  color: var(--service-color);
+}
+
+/* Process Section - OPTIMIZED */
+.process-section {
+  background: var(--color-beige);
+  border-radius: 24px; /* Slightly smaller */
+  padding: 3rem 2rem; /* Reduced padding */
+  margin-bottom: 3rem; /* Reduced */
+}
+
+.process-header {
+  text-align: center;
+  margin-bottom: 2.5rem; /* Reduced */
+}
+
+.process-header h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem); /* Slightly smaller */
+  margin-bottom: 0.75rem; /* Reduced */
+  color: var(--color-primary);
+}
+
+.process-header p {
+  font-size: 1.1rem; /* Slightly smaller */
+  color: var(--color-text);
+  opacity: 0.85;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; /* Reduced gap */
+}
+
+.process-card {
+  background: var(--color-white);
+  padding: 2rem 1.5rem; /* Reduced padding */
+  border-radius: 14px; /* Slightly smaller */
+  text-align: center;
+  position: relative;
+  border: 2px solid transparent;
+  transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.process-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(255, 107, 0, 0.15);
+}
+
+.process-number {
+  position: absolute;
+  top: -12px; /* Slightly adjusted */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px; /* Slightly smaller */
+  height: 40px;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-accent)
+  );
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 1.125rem; /* Slightly smaller */
+  font-family: var(--font-heading);
+  box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+}
+
+.process-icon {
+  width: 60px; /* Smaller */
+  height: 60px;
+  background: var(--color-beige);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.75rem auto 1.25rem; /* Reduced margins */
+  color: var(--color-accent);
+  transition: var(--transition);
+}
+
+.process-card:hover .process-icon {
+  background: var(--color-accent);
+  color: var(--color-white);
+  transform: scale(1.1);
+}
+
+.process-card h3 {
+  font-size: 1.35rem; /* Slightly smaller */
+  color: var(--color-primary);
+  margin-bottom: 0.625rem; /* Reduced */
+  font-weight: 700;
+}
+
+.process-card p {
+  color: var(--color-text);
+  line-height: 1.6;
+  font-size: 0.95rem; /* Slightly smaller */
+  opacity: 0.85;
+}
+
+/* Services CTA - OPTIMIZED */
+.services-cta {
+  text-align: center;
+  padding: 2rem 0; /* Reduced padding */
+}
+
+.services-cta-content {
+  background: linear-gradient(135deg, #424633, #2e3126); /* Updated */
+  padding: clamp(3rem, 5vw, 4rem) clamp(2rem, 3vw, 3rem);
+  border-radius: 24px;
+  color: #ffffff;
+  box-shadow: 0 20px 60px rgba(66, 70, 51, 0.3); /* Updated */
+  text-align: center;
+}
+
+.services-cta-content h2 {
+  color: var(--color-white);
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem); /* Slightly smaller */
+  margin-bottom: 0.875rem; /* Reduced */
+  line-height: 1.2;
+}
+
+.services-cta-content p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.075rem; /* Slightly smaller */
+  margin-bottom: 2rem; /* Reduced */
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive - OPTIMIZED */
+@media (max-width: 1200px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .process-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .services-page {
+    padding: 2rem 1rem; /* More compact on mobile */
+  }
+
+  .services-header {
+    margin-bottom: 2rem;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .process-section {
+    padding: 2rem 1rem;
+  }
+
+  .process-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .services-cta-content {
+    padding: 2.5rem 1.75rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+
+  .cta-buttons .btn-primary,
+  .cta-buttons .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .service-card-new {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .services-header h1 {
+    font-size: 1.75rem;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "Devriese Software",
+  "short_name": "Devriese",
+  "description": "Professionele webontwikkeling, mobile apps en digitale oplossingen op maat. Van website tot webshop, van app tot maatwerk software.",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#424633",
+  "background_color": "#f4f8f5",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}
