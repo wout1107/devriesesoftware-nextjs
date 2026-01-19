@@ -16,6 +16,12 @@ services:
     environment:
       - NODE_ENV=production
       - HOSTNAME=0.0.0.0
+      - PAYLOAD_SECRET=${PAYLOAD_SECRET:-change-this-secret-in-production}
+      - DATABASE_URI=file:/app/data/payload.db
+    volumes:
+      # Persistent storage for Payload CMS
+      - payload-data:/app/data
+      - payload-media:/app/media
     networks:
       - devriese-network
     healthcheck:
@@ -36,6 +42,8 @@ services:
     environment:
       - NODE_ENV=development
       - WATCHPACK_POLLING=true
+      - PAYLOAD_SECRET=dev-secret-change-in-production
+      - DATABASE_URI=file:./payload.db
     volumes:
       - .:/app
       - /app/node_modules
@@ -44,6 +52,13 @@ services:
       - devriese-network
     profiles:
       - dev
+
+# Named volumes for data persistence
+volumes:
+  payload-data:
+    driver: local
+  payload-media:
+    driver: local
 
 networks:
   devriese-network:

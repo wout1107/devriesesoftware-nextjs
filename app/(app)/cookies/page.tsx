@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Cookie, Settings, CheckCircle, XCircle } from "lucide-react";
-import "../../styles/Legal.css";
+import "../../../styles/Legal.css";
 
 export default function Cookies() {
   return (

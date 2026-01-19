@@ -15,7 +15,7 @@ import {
   CheckCircle,
   Calendar,
 } from "lucide-react";
-import "../../styles/Contact.css";
+import "../../../styles/Contact.css";
 
 export default function Contact() {
   const [formData, setFormData] = useState({

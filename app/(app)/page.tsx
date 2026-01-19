@@ -16,7 +16,7 @@ import {
   Star,
 } from "lucide-react";
 import { TechIcons, TechName } from "@/components/TechIcons";
-import "../styles/Home.css";
+import "../../styles/Home.css";
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

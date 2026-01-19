@@ -50,6 +50,10 @@ COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
+# Create directories for Payload CMS data persistence
+RUN mkdir -p data media
+RUN chown nextjs:nodejs data media
+
 # Copy build output (standalone mode)
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static

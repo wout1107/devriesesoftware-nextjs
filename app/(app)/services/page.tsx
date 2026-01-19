@@ -17,7 +17,7 @@ import {
   CheckSquare,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import "../../styles/Services.css";
+import "../../../styles/Services.css";
 
 export default function Services() {
   const router = useRouter();

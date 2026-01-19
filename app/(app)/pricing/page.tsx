@@ -21,7 +21,7 @@ import {
   CheckSquare,
   CheckCircle,
 } from "lucide-react";
-import "../../styles/pricing.css";
+import "../../../styles/pricing.css";
 
 export default function Pricing() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);

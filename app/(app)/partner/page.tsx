@@ -15,7 +15,7 @@ import {
   Globe,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import "../../styles/Partner.css";
+import "../../../styles/Partner.css";
 
 export default function Partner() {
   const router = useRouter();

@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { FileText, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import "../../styles/Legal.css";
+import "../../../styles/Legal.css";
 
 export default function Terms() {
   return (
