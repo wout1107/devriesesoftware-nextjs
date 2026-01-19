@@ -8,7 +8,7 @@ FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
 # Copy package files
@@ -16,6 +16,9 @@ COPY package.json package-lock.json* ./
 
 # Install dependencies with clean install
 RUN npm ci --legacy-peer-deps
+
+# Install libsql for Alpine (musl)
+RUN npm install @libsql/linux-x64-musl --legacy-peer-deps || echo "libsql already installed"
 
 # ---- Builder Stage ----
 FROM base AS builder
@@ -57,6 +60,9 @@ RUN chown nextjs:nodejs data media
 # Copy build output (standalone mode)
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copy node_modules with libsql
+COPY --from=deps /app/node_modules ./node_modules
 
 # Switch to non-root user
 USER nextjs
