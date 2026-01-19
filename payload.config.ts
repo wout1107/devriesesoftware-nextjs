@@ -19,6 +19,22 @@ export default buildConfig({
         importMap: {
             baseDir: path.resolve(dirname),
         },
+        meta: {
+            titleSuffix: ' | Devriese Software CMS',
+            icons: [
+                {
+                    rel: 'icon',
+                    type: 'image/webp',
+                    url: '/DevrieseSoftwareRond.webp',
+                },
+            ],
+        },
+        components: {
+            graphics: {
+                Logo: '/components/AdminLogo',
+                Icon: '/components/AdminIcon',
+            },
+        },
     },
     collections: [Users, Media, Projects],
     editor: lexicalEditor(),
