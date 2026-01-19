@@ -4,7 +4,7 @@
 # ================================
 
 # ---- Base Stage ----
-FROM node:20-alpine AS base
+FROM node: 20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -12,7 +12,7 @@ RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json* ./
+COPY package. json package-lock.json* ./
 
 # Install dependencies with clean install
 RUN npm ci --legacy-peer-deps
@@ -46,23 +46,17 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy public assets
-COPY --from=builder /app/public ./public
-
-# Set correct permissions for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
 # Create directories for Payload CMS data persistence
-RUN mkdir -p data media
-RUN chown nextjs:nodejs data media
+RUN mkdir -p . next data media public
+RUN chown -R nextjs:nodejs . next data media public
 
-# Copy build output (standalone mode)
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copy all necessary files from builder
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next . /.next
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
 # Copy node_modules with libsql
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Switch to non-root user
 USER nextjs
@@ -74,5 +68,5 @@ EXPOSE 3000
 ENV HOSTNAME="0.0.0.0"
 ENV PORT=3000
 
-# Start the application
-CMD ["node", "server.js"]
+# Start the application with Next.js
+CMD ["node_modules/.bin/next", "start"]
