@@ -12,7 +12,7 @@ RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
 
 # Copy package files
-COPY package. json package-lock.json* ./
+COPY package.json package-lock.json* ./
 
 # Install dependencies with clean install
 RUN npm ci --legacy-peer-deps
@@ -47,12 +47,13 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 # Create directories for Payload CMS data persistence
-RUN mkdir -p . next data media public
-RUN chown -R nextjs:nodejs . next data media public
+# Create directories for Payload CMS data persistence
+RUN mkdir -p .next data media public
+RUN chown -R nextjs:nodejs .next data media public
 
 # Copy all necessary files from builder
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next . /.next
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 
 # Copy node_modules with libsql
