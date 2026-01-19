@@ -8,7 +8,7 @@ import "../../../styles/Portfolio.css";
 
 // Type for project data from Payload CMS
 interface Project {
-    id: string;
+    id: string | number;
     name: string;
     category: string;
     description: string;
