@@ -2,13 +2,13 @@ import { loadEnvConfig } from '@next/env'
 loadEnvConfig(process.cwd())
 
 import { getPayload } from 'payload'
-import configPromise from '../payload.config.js'
+import config from '@/payload.config'
 import { seoPages } from './seo-data'
 
 const seed = async () => {
     console.log('Starting seed...')
     try {
-        const payload = await getPayload({ config: configPromise })
+        const payload = await getPayload({ config })
 
         for (const page of seoPages) {
             const existing = await payload.find({
