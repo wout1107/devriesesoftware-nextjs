@@ -55,6 +55,8 @@ RUN chown -R nextjs:nodejs .next data media public
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
+COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
 
 # Copy node_modules with libsql
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
