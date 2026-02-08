@@ -1,5 +1,5 @@
 import { getPayload } from 'payload'
-import config from '@/payload.config'
+import configPromise from '@/payload.config'
 import { seoPages } from '@/scripts/seo-data'
 import { NextResponse } from 'next/server'
 
@@ -7,46 +7,51 @@ export const dynamic = 'force-dynamic'
 
 export async function GET() {
     try {
-        const payload = await getPayload({ config })
+        const payload = await getPayload({ config: configPromise })
 
-        console.log('--- DB PUSH START ---')
-        // Dit forceert Drizzle/Payload om de tabellen aan te maken 
-        // als ze nog niet bestaan in de huidige .db file
-        // @ts-ignore
-        await payload.db.push()
-        console.log('--- DB PUSH KLAAR ---')
+        console.log('--- Start Seeding Process ---')
 
         for (const page of seoPages) {
-            // We gebruiken upsert-logica: als hij bestaat, updaten we hem
-            const existing = await payload.find({
-                collection: 'landing-pages',
-                where: { slug: { equals: page.slug } },
-            })
+            try {
+                // We proberen eerst te zoeken. 
+                // Als de tabel niet bestaat, vangen we de error hier op.
+                const existing = await payload.find({
+                    collection: 'landing-pages',
+                    where: { slug: { equals: page.slug } },
+                })
 
-            if (existing.docs.length > 0) {
-                await payload.update({
-                    collection: 'landing-pages',
-                    id: existing.docs[0].id,
-                    data: page,
-                })
-            } else {
-                await payload.create({
-                    collection: 'landing-pages',
-                    data: page,
-                })
+                if (existing.docs.length > 0) {
+                    console.log(`Updating: ${page.slug}`)
+                    await payload.update({
+                        collection: 'landing-pages',
+                        id: existing.docs[0].id,
+                        data: page,
+                    })
+                } else {
+                    console.log(`Creating: ${page.slug}`)
+                    await payload.create({
+                        collection: 'landing-pages',
+                        data: page,
+                    })
+                }
+            } catch (dbError: any) {
+                // Als de tabel niet bestaat, stoppen we de loop en geven we instructies
+                if (dbError.message.includes('no such table')) {
+                    return NextResponse.json({
+                        success: false,
+                        error: "Tabel 'landing_pages' bestaat niet. Voer 'npx payload migrate' uit of reset de db.",
+                        suggestion: "Verwijder de database op de server en herstart de container."
+                    }, { status: 500 })
+                }
+                throw dbError
             }
         }
 
         return NextResponse.json({
             success: true,
-            message: `Database gesynchroniseerd en ${seoPages.length} pagina's verwerkt.`
+            message: `${seoPages.length} SEO pagina's succesvol verwerkt.`
         })
     } catch (err: any) {
-        console.error('Seed Error:', err)
-        return NextResponse.json({
-            success: false,
-            error: err.message,
-            stack: err.stack
-        }, { status: 500 })
+        return NextResponse.json({ success: false, error: err.message }, { status: 500 })
     }
 }
