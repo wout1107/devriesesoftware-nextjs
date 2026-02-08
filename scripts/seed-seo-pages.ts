@@ -1,17 +1,12 @@
-import { loadEnvConfig } from '@next/env'
 import { getPayload } from 'payload'
 import { seoPages } from './seo-data'
-
-// We dwingen de import naar de config. 
-// @ts-ignore - Dit onderdrukt de error 5097 zodat je build slaagt
-import configPromise from '../payload.config.ts'
-
-loadEnvConfig(process.cwd())
+// GEEN import van payload.config!
 
 const seed = async () => {
-    console.log('Starting seed in production environment...')
+    console.log('Starting seed via Payload CLI...')
     try {
-        const payload = await getPayload({ config: configPromise })
+        // Payload haalt de config zelf op uit de omgeving/build
+        const payload = await getPayload({ config: (global as any).payloadConfig })
 
         for (const page of seoPages) {
             const existing = await payload.find({
