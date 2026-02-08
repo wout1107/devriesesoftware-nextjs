@@ -12,7 +12,8 @@
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
     "docker:dev": "docker compose --profile dev up dev",
-    "docker:prod": "docker compose up app -d"
+    "docker:prod": "docker compose up app -d",
+    "seed": "tsx scripts/seed-seo-pages.ts"
   },
   "dependencies": {
     "@payloadcms/db-sqlite": "^3.72.0",
