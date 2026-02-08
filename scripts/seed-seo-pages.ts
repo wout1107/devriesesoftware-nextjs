@@ -2,7 +2,7 @@ import { loadEnvConfig } from '@next/env'
 loadEnvConfig(process.cwd())
 
 import { getPayload } from 'payload'
-import configPromise from '@payload-config'
+import configPromise from '../payload.config'
 import { seoPages } from './seo-data'
 
 const seed = async () => {
