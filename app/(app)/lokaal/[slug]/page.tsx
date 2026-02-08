@@ -12,15 +12,20 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-    const payload = await getPayload({ config: configPromise })
-    const pages = await payload.find({
-        collection: 'landing-pages',
-        limit: 100,
-    })
+    try {
+        const payload = await getPayload({ config: configPromise })
+        const pages = await payload.find({
+            collection: 'landing-pages',
+            limit: 100,
+        })
 
-    return pages.docs.map((page) => ({
-        slug: page.slug,
-    }))
+        return pages.docs.map((page) => ({
+            slug: page.slug,
+        }))
+    } catch (error) {
+        console.warn('Database not ready during build, skipping static param generation:', error)
+        return []
+    }
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
