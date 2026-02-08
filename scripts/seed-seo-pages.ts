@@ -1,15 +1,19 @@
 import { loadEnvConfig } from '@next/env'
-loadEnvConfig(process.cwd())
-
 import { getPayload } from 'payload'
-// We gebruiken het directe pad naar de config file
-// .js extensie omdat je aangaf dat dit nodig is voor je compiler
-import config from '../payload.config.js'
 import { seoPages } from './seo-data'
+import path from 'path'
+
+// Laad envs
+loadEnvConfig(process.cwd())
 
 const seed = async () => {
     console.log('Starting seed...')
     try {
+        // We importeren de config DYNAMISCH. Dit omzeilt de import-fouten bij het opstarten.
+        // We gebruiken path.resolve om zeker te zijn van de locatie in de container (/app/payload.config)
+        const configModule = await import('../payload.config')
+        const config = configModule.default || configModule
+
         const payload = await getPayload({ config })
 
         for (const page of seoPages) {
