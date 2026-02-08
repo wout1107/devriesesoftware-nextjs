@@ -1,14 +1,23 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
-import { seoPages } from '@/scripts/seo-data' // pas pad aan indien nodig
+import { seoPages } from '@/scripts/seo-data'
 import { NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
     try {
         const payload = await getPayload({ config })
-        console.log('API Seed gestart...')
+
+        console.log('--- DB PUSH START ---')
+        // Dit forceert Drizzle/Payload om de tabellen aan te maken 
+        // als ze nog niet bestaan in de huidige .db file
+        // @ts-ignore
+        await payload.db.push()
+        console.log('--- DB PUSH KLAAR ---')
 
         for (const page of seoPages) {
+            // We gebruiken upsert-logica: als hij bestaat, updaten we hem
             const existing = await payload.find({
                 collection: 'landing-pages',
                 where: { slug: { equals: page.slug } },
@@ -28,8 +37,16 @@ export async function GET() {
             }
         }
 
-        return NextResponse.json({ message: 'Seed succesvol!' })
+        return NextResponse.json({
+            success: true,
+            message: `Database gesynchroniseerd en ${seoPages.length} pagina's verwerkt.`
+        })
     } catch (err: any) {
-        return NextResponse.json({ error: err.message }, { status: 500 })
+        console.error('Seed Error:', err)
+        return NextResponse.json({
+            success: false,
+            error: err.message,
+            stack: err.stack
+        }, { status: 500 })
     }
 }
