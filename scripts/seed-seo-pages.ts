@@ -2,7 +2,9 @@ import { loadEnvConfig } from '@next/env'
 loadEnvConfig(process.cwd())
 
 import { getPayload } from 'payload'
-import config from '@/payload.config'
+// We gebruiken het directe pad naar de config file
+// .js extensie omdat je aangaf dat dit nodig is voor je compiler
+import config from '../payload.config.js'
 import { seoPages } from './seo-data'
 
 const seed = async () => {
@@ -21,14 +23,14 @@ const seed = async () => {
             })
 
             if (existing.docs.length > 0) {
-                console.log(`Updating ${page.slug}`)
+                console.log(`Updating ${page.slug}...`)
                 await payload.update({
                     collection: 'landing-pages',
                     id: existing.docs[0].id,
                     data: page,
                 })
             } else {
-                console.log(`Creating ${page.slug}`)
+                console.log(`Creating ${page.slug}...`)
                 await payload.create({
                     collection: 'landing-pages',
                     data: page,
