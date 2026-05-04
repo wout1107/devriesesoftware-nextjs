@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import ScrollToTop from "@/components/ScrollToTop";
+import SmoothScrollProvider from "@/components/animations/SmoothScrollProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -76,10 +77,10 @@ export default function RootLayout({
       <body className={`${inter.variable} ${poppins.variable}`}>
         <ScrollToTop />
         <Navigation />
-        <main className="main-content">
+        <SmoothScrollProvider>
           <div className="content-wrapper">{children}</div>
           <Footer />
-        </main>
+        </SmoothScrollProvider>
         <CookieBanner />
       </body>
     </html>

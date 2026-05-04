@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import {
   Check,
   Plus,
@@ -13,165 +12,165 @@ import {
   HelpCircle,
   Layers,
   Globe,
-  Server,
   RefreshCw,
   Zap,
   Package,
   ArrowRight,
-  CheckSquare,
-  CheckCircle,
 } from "lucide-react";
+import FadeUp from "@/components/animations/FadeUp";
+import StaggerGroup from "@/components/animations/StaggerGroup";
+import SplitTextReveal from "@/components/animations/SplitTextReveal";
+import MagneticButton from "@/components/animations/MagneticButton";
 import "../../../styles/pricing.css";
+
+const packages = [
+  {
+    name: "Essential",
+    price: "1.250",
+    description:
+      "De perfecte start voor zelfstandigen die meteen professioneel voor de dag willen komen.",
+    subtitle:
+      "Tech: Next.js (Razendsnel). CMS: Ingebouwd Visueel CMS (Eenvoudig teksten/foto's aanpassen zonder technische kennis).",
+    timeline: "1 - 2 weken",
+    maintenance: "€25/maand",
+    color: "#424633",
+    badge: "Perfect voor starters",
+    popular: false,
+    features: [
+      "Onepager of max. 3 pagina's",
+      "Contactformulier & Google Maps",
+      "Basis SEO-setup (Google Indexatie)",
+      "Oplevering binnen 1 - 2 weken",
+    ],
+    maintenanceFeatures: [
+      "Beveiligingsupdates",
+      "Kleine aanpassingen (1x/maand)",
+      "Basis support per mail",
+      "Hosting inbegrepen",
+    ],
+  },
+  {
+    name: "Business Growth",
+    price: "2.450",
+    description:
+      "Voor KMO's die topposities in Google willen en leads willen genereren.",
+    subtitle:
+      "Tech: Next.js + Geavanceerde optimalisatie. CMS: Gebruiksvriendelijk CMS (Volledig beheer van pagina's, blogs en teamleden).",
+    timeline: "2 - 3 weken",
+    maintenance: "€40/maand",
+    color: "#FF6B00",
+    badge: "Meest gekozen",
+    popular: true,
+    features: [
+      "Tot 8 unieke pagina's",
+      "Blog / Nieuws module",
+      "Analytics Dashboard (Privacy-vriendelijk)",
+      "Call-to-Action optimalisatie",
+      "Oplevering binnen 2 - 3 weken",
+    ],
+    maintenanceFeatures: [
+      "Beveiligingsupdates",
+      "Kleine aanpassingen (2x/maand)",
+      "E-mail & telefonische support",
+      "Hosting inbegrepen",
+    ],
+  },
+  {
+    name: "Custom Headless",
+    price: "3.950",
+    pricePrefix: "Vanaf",
+    description:
+      "Voor merken die geen compromissen sluiten. Maatwerk, animaties en complexe data.",
+    subtitle:
+      "Tech: Enterprise Headless Architectuur. CMS: Strapi CMS (Volledig modulair database beheer).",
+    timeline: "4+ weken",
+    maintenance: "€65/maand",
+    color: "#424633",
+    badge: "Voor professionals",
+    popular: false,
+    features: [
+      "Volledig maatwerk (Pixel-perfect design implementatie)",
+      "Custom Animaties (GSAP)",
+      "Meertaligheid (Multi-language setup)",
+      "Koppelingen (CRM, API's, ...)",
+      "Oplevering binnen 4+ weken",
+    ],
+    maintenanceFeatures: [
+      "Inclusief VPS Hosting & Database beheer",
+      "Onbeperkte kleine updates",
+      "Prioritaire support",
+      "Contentbeheer support",
+      "Dagelijkse Backups",
+    ],
+  },
+];
+
+const customFeatures = [
+  {
+    icon: Layers,
+    title: "Headless Architectuur",
+    description:
+      "Ontkoppelde frontend (Next.js) en backend (Strapi) voor maximale veiligheid en snelheid",
+  },
+  {
+    icon: Globe,
+    title: "Dual-Brand Systemen",
+    description:
+      "Beheer meerdere merken of websites vanuit één centraal dashboard",
+  },
+  {
+    icon: Zap,
+    title: "High-End Experience",
+    description:
+      "Custom animaties (GSAP), scroll-reveals en micro-interacties",
+  },
+  {
+    icon: RefreshCw,
+    title: "Complexe Integraties",
+    description: "Koppelingen met ERP, CRM of externe API's",
+  },
+];
+
+const faqs = [
+  {
+    question: "Wat is inbegrepen in de onderhoudspakketten?",
+    answer:
+      "Onze onderhoudspakketten bevatten beveiligingsupdates, technische support, kleine aanpassingen en regelmatige backups om uw website veilig en up-to-date te houden.",
+  },
+  {
+    question: "Kan ik later upgraden naar een hoger pakket?",
+    answer:
+      "Ja, u kunt altijd upgraden. We berekenen alleen het verschil tussen de pakketten en zorgen voor een soepele overgang.",
+  },
+  {
+    question: "Hoe lang duurt het ontwikkelproces?",
+    answer:
+      "Dit varieert per pakket: Starter (1 week), Business (1,5-2 weken), Premium (2-3 weken). Complexere projecten en Custom Development hebben een aangepaste tijdlijn.",
+  },
+  {
+    question: "Krijg ik eigendom van de broncode?",
+    answer:
+      "Ja, na volledige betaling krijgt u volledige eigendom van alle broncode en bestanden van uw website.",
+  },
+  {
+    question: "Wat betekent Strapi CMS?",
+    answer:
+      "Strapi is een open source CMS waarmee u zelf uw website-inhoud kunt beheren zonder technische kennis. De meerkost van €500 dekt onze tijd en expertise voor de integratie.",
+  },
+  {
+    question: "Is hosting inbegrepen in de prijzen?",
+    answer:
+      "Ja, de webhosting is volledig inbegrepen in onze maandelijkse onderhoudspakketten. U hoeft zich geen zorgen te maken over het apart regelen van hosting - wij zorgen voor snelle, betrouwbare hosting, inclusief het technisch beheer en monitoring van uw website.",
+  },
+];
 
 export default function Pricing() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const router = useRouter();
 
-  const packages = [
-    {
-      name: "Essential",
-      price: "1.250",
-      description: "De perfecte start voor zelfstandigen die meteen professioneel voor de dag willen komen.",
-      subtitle:
-        "Tech: Next.js (Razendsnel). CMS: Ingebouwd Visueel CMS (Eenvoudig teksten/foto's aanpassen zonder technische kennis).",
-      timeline: "1 - 2 weken",
-      maintenance: "€25/maand",
-      color: "#424633",
-      badge: "Perfect voor starters",
-      popular: false,
-      features: [
-        "Onepager of max. 3 pagina's",
-        "Contactformulier & Google Maps",
-        "Basis SEO-setup (Google Indexatie)",
-        "Oplevering binnen 1 - 2 weken",
-      ],
-      maintenanceFeatures: [
-        "Beveiligingsupdates",
-        "Kleine aanpassingen (1x/maand)",
-        "Basis support per mail",
-        "Hosting inbegrepen",
-      ],
-    },
-    {
-      name: "Business Growth",
-      price: "2.450",
-      description:
-        "Voor KMO's die topposities in Google willen en leads willen genereren.",
-      subtitle:
-        "Tech: Next.js + Geavanceerde optimalisatie. CMS: Gebruiksvriendelijk CMS (Volledig beheer van pagina's, blogs en teamleden).",
-      timeline: "2 - 3 weken",
-      maintenance: "€40/maand",
-      color: "#FF6B00",
-      badge: "Meest gekozen",
-      popular: true,
-      features: [
-        "Tot 8 unieke pagina's",
-        "Blog / Nieuws module",
-        "Analytics Dashboard (Privacy-vriendelijk)",
-        "Call-to-Action optimalisatie",
-        "Oplevering binnen 2 - 3 weken",
-      ],
-      maintenanceFeatures: [
-        "Beveiligingsupdates",
-        "Kleine aanpassingen (2x/maand)",
-        "E-mail & telefonische support",
-        "Hosting inbegrepen",
-      ],
-    },
-    {
-      name: "Custom Headless",
-      price: "3.950",
-      pricePrefix: "Vanaf",
-      description:
-        "Voor merken die geen compromissen sluiten. Maatwerk, animaties en complexe data.",
-      subtitle:
-        "Tech: Enterprise Headless Architectuur. CMS: Strapi CMS (Volledig modulair database beheer).",
-      timeline: "4+ weken",
-      maintenance: "€65/maand",
-      color: "#424633",
-      badge: "Voor professionals",
-      popular: false,
-      features: [
-        "Volledig maatwerk (Pixel-perfect design implementatie)",
-        "Custom Animaties (Framer Motion)",
-        "Meertaligheid (Multi-language setup)",
-        "Koppelingen (CRM, API's, ...)",
-        "Oplevering binnen 4+ weken",
-      ],
-      maintenanceFeatures: [
-        "Inclusief VPS Hosting & Database beheer",
-        "Onbeperkte kleine updates",
-        "Prioritaire support",
-        "Contentbeheer support",
-        "Dagelijkse Backups",
-      ],
-    },
-  ];
-
-  const customFeatures = [
-    {
-      icon: Layers,
-      title: "Headless Architectuur",
-      description: "Ontkoppelde frontend (Next.js) en backend (Strapi) voor maximale veiligheid en snelheid",
-    },
-    {
-      icon: Globe,
-      title: "Dual-Brand Systemen",
-      description: "Beheer meerdere merken of websites vanuit één centraal dashboard",
-    },
-    {
-      icon: Zap,
-      title: "High-End Experience",
-      description: "Custom animaties (Framer Motion), scroll-reveals en micro-interacties",
-    },
-    {
-      icon: RefreshCw,
-      title: "Complexe Integraties",
-      description: "Koppelingen met ERP, CRM of externe API's",
-    },
-  ];
-
-  const faqs = [
-    {
-      question: "Wat is inbegrepen in de onderhoudspakketten?",
-      answer:
-        "Onze onderhoudspakketten bevatten beveiligingsupdates, technische support, kleine aanpassingen en regelmatige backups om uw website veilig en up-to-date te houden.",
-    },
-    {
-      question: "Kan ik later upgraden naar een hoger pakket?",
-      answer:
-        "Ja, u kunt altijd upgraden. We berekenen alleen het verschil tussen de pakketten en zorgen voor een soepele overgang.",
-    },
-    {
-      question: "Hoe lang duurt het ontwikkelproces?",
-      answer:
-        "Dit varieert per pakket: Starter (1 week), Business (1,5-2 weken), Premium (2-3 weken). Complexere projecten en Custom Development hebben een aangepaste tijdlijn.",
-    },
-    {
-      question: "Krijg ik eigendom van de broncode?",
-      answer:
-        "Ja, na volledige betaling krijgt u volledige eigendom van alle broncode en bestanden van uw website.",
-    },
-    {
-      question: "Wat betekent Strapi CMS?",
-      answer:
-        "Strapi is een open source CMS waarmee u zelf uw website-inhoud kunt beheren zonder technische kennis. De meerkost van €500 dekt onze tijd en expertise voor de integratie.",
-    },
-    {
-      question: "Is hosting inbegrepen in de prijzen?",
-      answer:
-        "Ja, de webhosting is volledig inbegrepen in onze maandelijkse onderhoudspakketten. U hoeft zich geen zorgen te maken over het apart regelen van hosting - wij zorgen voor snelle, betrouwbare hosting, inclusief het technisch beheer en monitoring van uw website.",
-    },
-  ];
-
   return (
     <div className="pricing-page">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="pricing-header"
-      >
+      <FadeUp className="pricing-header">
         <div className="header-icon-wrapper">
           <Package size={48} className="header-icon" />
         </div>
@@ -180,17 +179,17 @@ export default function Pricing() {
           Transparante prijzen voor professionele websites. Alle prijzen zijn
           exclusief BTW.
         </p>
-      </motion.div>
+      </FadeUp>
 
-      {/* Pricing Cards */}
-      <div className="pricing-grid-centered">
+      <StaggerGroup
+        className="pricing-grid-centered"
+        stagger={0.12}
+        y={32}
+        duration={0.85}
+      >
         {packages.map((pkg, index) => (
-          <motion.div
+          <div
             key={index}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1 }}
             className={`pricing-card-centered ${pkg.popular ? "popular" : ""}`}
             style={{ "--package-color": pkg.color } as React.CSSProperties}
           >
@@ -243,64 +242,45 @@ export default function Pricing() {
                 ))}
               </ul>
             </div>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <MagneticButton
               onClick={() => router.push("/contact")}
               className="btn-primary btn-large select-package-btn"
-              style={{ backgroundColor: pkg.color }}
             >
               <ArrowRight size={20} />
               <span>Kies {pkg.name}</span>
-            </motion.button>
-          </motion.div>
+            </MagneticButton>
+          </div>
         ))}
-      </div>
+      </StaggerGroup>
 
-      {/* Custom Development Section */}
       <section className="custom-development-section-full">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="custom-dev-header-full"
-        >
+        <FadeUp className="custom-dev-header-full">
           <div className="custom-header-icon-wrapper">
             <Code size={56} className="custom-header-icon" />
           </div>
-          <h2>Enterprise & Maatwerk Solutions</h2>
+          <SplitTextReveal as="h2" type="words" stagger={0.05}>
+            Enterprise & Maatwerk Solutions
+          </SplitTextReveal>
           <p className="custom-intro-full">
             Voor organisaties met complexe behoeften, meerdere merken of
             geavanceerde data-architectuur. Wij bouwen schaalbare applicaties
             die klaar zijn voor de toekomst.
           </p>
 
-          <div className="custom-features-grid">
+          <StaggerGroup className="custom-features-grid" stagger={0.1} y={24}>
             {customFeatures.map((feature, index) => {
               const Icon = feature.icon;
               return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
-                  className="custom-feature-card"
-                >
+                <div key={index} className="custom-feature-card">
                   <Icon size={32} className="custom-feature-icon" />
                   <h4>{feature.title}</h4>
                   <p>{feature.description}</p>
-                </motion.div>
+                </div>
               );
             })}
-          </div>
+          </StaggerGroup>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="custom-pricing-box"
-          >
+          <FadeUp className="custom-pricing-box" delay={0.1}>
             <div className="custom-price-info">
               <Code size={48} className="custom-box-icon" />
               <h3>Enterprise & Maatwerk</h3>
@@ -326,42 +306,33 @@ export default function Pricing() {
                 contact op voor een vrijblijvende offerte op maat.
               </p>
             </div>
-            <button
+            <MagneticButton
               className="btn-primary btn-large"
               onClick={() => router.push("/contact")}
             >
               <Rocket size={20} />
               <span>Vraag offerte aan.</span>
-            </button>
-          </motion.div>
-        </motion.div>
+            </MagneticButton>
+          </FadeUp>
+        </FadeUp>
       </section>
 
-      {/* Extensions & Modules Section */}
       <section className="extensions-section-redesigned">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="extensions-header-redesigned"
-        >
+        <FadeUp className="extensions-header-redesigned">
           <div className="extensions-icon-badge">
             <Plus size={32} className="extensions-header-icon" />
           </div>
-          <h2>Uitbreidingen & Modules</h2>
+          <SplitTextReveal as="h2" type="words" stagger={0.05}>
+            Uitbreidingen & Modules
+          </SplitTextReveal>
           <p className="extensions-subtitle">
             Breid uw website uit met krachtige extra functionaliteiten. Alle
             prijzen zijn exclusief BTW.
           </p>
-        </motion.div>
+        </FadeUp>
 
         <div className="extensions-categories">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="extension-category"
-          >
+          <FadeUp className="extension-category">
             <div className="category-header">
               <Settings size={24} className="category-icon" />
               <h3>Basis Functionaliteiten</h3>
@@ -369,9 +340,9 @@ export default function Pricing() {
             <div className="category-grid">
               <div className="extension-card">
                 <div className="extension-card-content">
-                  <h4>Extra Pagina's (Advanced)</h4>
+                  <h4>Extra Pagina&apos;s (Advanced)</h4>
                   <p className="extension-description">
-                    Pagina's met custom designblokken en CMS-integratie
+                    Pagina&apos;s met custom designblokken en CMS-integratie
                   </p>
                   <div className="extension-price-tag">
                     <span className="price-amount">€180</span>
@@ -421,15 +392,9 @@ export default function Pricing() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </FadeUp>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="extension-category"
-          >
+          <FadeUp className="extension-category" delay={0.1}>
             <div className="category-header">
               <ShoppingCart size={24} className="category-icon" />
               <h3>E-commerce & Verkoop</h3>
@@ -471,15 +436,9 @@ export default function Pricing() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </FadeUp>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="extension-category"
-          >
+          <FadeUp className="extension-category" delay={0.15}>
             <div className="category-header">
               <Zap size={24} className="category-icon" />
               <h3>Marketing & Optimalisatie</h3>
@@ -511,7 +470,7 @@ export default function Pricing() {
 
               <div className="extension-card">
                 <div className="extension-card-content">
-                  <h4>Fotografie + stockfoto's</h4>
+                  <h4>Fotografie + stockfoto&apos;s</h4>
                   <p className="extension-description">
                     Professionele beelden voor uw website
                   </p>
@@ -521,15 +480,10 @@ export default function Pricing() {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </FadeUp>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="extensions-info-box"
-        >
+        <FadeUp className="extensions-info-box">
           <HelpCircle size={24} className="info-icon" />
           <div className="info-content">
             <h4>Niet gevonden wat u zoekt?</h4>
@@ -539,28 +493,18 @@ export default function Pricing() {
               behoeften.
             </p>
           </div>
-        </motion.div>
+        </FadeUp>
       </section>
 
-      {/* FAQ Section */}
       <section className="faq-section">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="faq-header"
-        >
+        <FadeUp className="faq-header">
           <h2>Veelgestelde Vragen</h2>
-        </motion.div>
+        </FadeUp>
 
-        <div className="faq-container">
+        <StaggerGroup className="faq-container" stagger={0.06} y={18}>
           {faqs.map((faq, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
               className={`faq-item ${openFaq === index ? "open" : ""}`}
               onClick={() => setOpenFaq(openFaq === index ? null : index)}
             >
@@ -572,36 +516,32 @@ export default function Pricing() {
                 </span>
               </div>
               {openFaq === index && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="faq-answer"
-                >
+                <div className="faq-answer">
                   <p>{faq.answer}</p>
-                </motion.div>
+                </div>
               )}
-            </motion.div>
+            </div>
           ))}
-        </div>
+        </StaggerGroup>
       </section>
 
-      {/* CTA Section */}
       <section className="pricing-cta">
-        <div className="pricing-cta-content">
-          <h2>Klaar om te starten?</h2>
+        <FadeUp className="pricing-cta-content">
+          <SplitTextReveal as="h2" type="words" stagger={0.05}>
+            Klaar om te starten?
+          </SplitTextReveal>
           <p>
             Laten we samen jouw online succes bouwen. Neem vrijblijvend contact
             op voor een persoonlijk adviesgesprek.
           </p>
-          <button
+          <MagneticButton
             className="btn-primary btn-large"
             onClick={() => router.push("/contact")}
           >
             <Rocket size={20} />
             <span>Neem contact op</span>
-          </button>
-        </div>
+          </MagneticButton>
+        </FadeUp>
       </section>
     </div>
   );

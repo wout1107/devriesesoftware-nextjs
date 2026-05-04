@@ -1,31 +1,22 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { FileText, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import FadeUp from "@/components/animations/FadeUp";
 import "../../../styles/Legal.css";
 
 export default function Terms() {
   return (
     <div className="legal-page">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="legal-header"
-      >
+      <FadeUp className="legal-header">
         <FileText size={48} className="legal-icon" />
         <h1>Algemene Voorwaarden</h1>
         <p className="legal-subtitle">
           Laatst bijgewerkt: {new Date().toLocaleDateString("nl-BE")}
         </p>
-      </motion.div>
+      </FadeUp>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="legal-content"
-      >
+      <FadeUp className="legal-content" delay={0.1}>
         <section className="legal-section">
           <h2>1. Toepassingsgebied</h2>
           <p>
@@ -90,7 +81,7 @@ export default function Terms() {
           <h2>4. Prijzen en Betaling</h2>
           <h3>4.1 Prijzen</h3>
           <p>
-            Alle genoemde prijzen zijn in euro's, exclusief BTW en exclusief
+            Alle genoemde prijzen zijn in euro&apos;s, exclusief BTW en exclusief
             eventuele kosten van derden (zoals hostingkosten, licenties,
             domeinnamen), tenzij expliciet anders vermeld.
           </p>
@@ -372,7 +363,7 @@ export default function Terms() {
             +32 498 52 54 82
           </p>
         </div>
-      </motion.div>
+      </FadeUp>
     </div>
   );
 }

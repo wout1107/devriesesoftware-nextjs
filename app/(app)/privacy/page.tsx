@@ -1,31 +1,22 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Shield, Mail, Phone, Calendar } from "lucide-react";
 import Link from "next/link";
+import FadeUp from "@/components/animations/FadeUp";
 import "../../../styles/Legal.css";
 
 export default function Privacy() {
   return (
     <div className="legal-page">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="legal-header"
-      >
+      <FadeUp className="legal-header">
         <Shield size={48} className="legal-icon" />
         <h1>Privacybeleid</h1>
         <p className="legal-subtitle">
           Laatst bijgewerkt: {new Date().toLocaleDateString("nl-BE")}
         </p>
-      </motion.div>
+      </FadeUp>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="legal-content"
-      >
+      <FadeUp className="legal-content" delay={0.1}>
         <section className="legal-section">
           <h2>1. Inleiding</h2>
           <p>
@@ -325,7 +316,7 @@ export default function Privacy() {
             </p>
           </div>
         </section>
-      </motion.div>
+      </FadeUp>
     </div>
   );
 }

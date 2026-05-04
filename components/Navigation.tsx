@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import {
   Home,
@@ -17,115 +16,115 @@ import {
   Github,
   Facebook,
 } from "lucide-react";
+import { useGSAP } from "@gsap/react";
+import { gsap, registerGsapPlugins } from "./animations/gsap-register";
 import "../styles/Navigation.css";
+
+const navItems = [
+  { path: "/", icon: Home, label: "Home" },
+  { path: "/services", icon: Briefcase, label: "Diensten" },
+  { path: "/portfolio", icon: FolderOpen, label: "Portfolio" },
+  { path: "/pricing", icon: DollarSign, label: "Prijzen" },
+  { path: "/contact", icon: Mail, label: "Contact" },
+];
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const navRef = useRef<HTMLElement | null>(null);
+  const brandRef = useRef<HTMLDivElement | null>(null);
+  const linksRef = useRef<HTMLUListElement | null>(null);
+  const footerRef = useRef<HTMLDivElement | null>(null);
+  const toggleIconRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
 
   useEffect(() => {
-    const main = document.querySelector(".main-content") as HTMLElement;
-    if (!main) return;
-
     const isMobile = window.innerWidth <= 768;
-
     if (isMobile && isOpen) {
-      main.style.overflow = "hidden";
-      main.style.height = "100vh";
-      main.style.position = "fixed";
-      main.style.width = "100%";
+      document.body.style.overflow = "hidden";
     } else {
-      main.style.overflow = "";
-      main.style.height = "";
-      main.style.position = "";
-      main.style.width = "";
+      document.body.style.overflow = "";
     }
-
     return () => {
-      main.style.overflow = "";
-      main.style.height = "";
-      main.style.position = "";
-      main.style.width = "";
+      document.body.style.overflow = "";
     };
   }, [isOpen]);
 
-  const navItems = [
-    { path: "/", icon: Home, label: "Home" },
-    { path: "/services", icon: Briefcase, label: "Diensten" },
-    { path: "/portfolio", icon: FolderOpen, label: "Portfolio" },
-    { path: "/pricing", icon: DollarSign, label: "Prijzen" },
-    { path: "/contact", icon: Mail, label: "Contact" },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  useGSAP(
+    () => {
+      registerGsapPlugins();
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        if (brandRef.current) {
+          tl.from(brandRef.current, { y: -30, autoAlpha: 0, duration: 0.7 }, 0);
+        }
+        if (linksRef.current) {
+          tl.from(
+            linksRef.current.children,
+            { x: -24, autoAlpha: 0, duration: 0.55, stagger: 0.07 },
+            0.15
+          );
+        }
+        if (footerRef.current) {
+          tl.from(footerRef.current, { y: 30, autoAlpha: 0, duration: 0.7 }, 0.4);
+        }
+      });
+      mm.add("(prefers-reduced-motion: reduce)", () => {
+        if (brandRef.current) gsap.set(brandRef.current, { autoAlpha: 1, y: 0 });
+        if (linksRef.current)
+          gsap.set(linksRef.current.children, { autoAlpha: 1, x: 0 });
+        if (footerRef.current) gsap.set(footerRef.current, { autoAlpha: 1, y: 0 });
+      });
     },
-  };
+    { scope: navRef }
+  );
 
-  const itemVariants = {
-    hidden: { x: -20, opacity: 0 },
-    visible: { x: 0, opacity: 1 },
-  };
+  useGSAP(
+    () => {
+      const el = toggleIconRef.current;
+      if (!el) return;
+      gsap.fromTo(
+        el,
+        { rotate: isOpen ? -90 : 90, autoAlpha: 0 },
+        { rotate: 0, autoAlpha: 1, duration: 0.25, ease: "power2.out" }
+      );
+    },
+    { dependencies: [isOpen] }
+  );
 
   return (
     <>
-      <motion.button
+      <button
         className={`mobile-toggle ${isOpen ? "open" : ""}`}
         onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        animate={{ rotate: isOpen ? 90 : 0 }}
         aria-label={isOpen ? "Sluit navigatiemenu" : "Open navigatiemenu"}
         aria-expanded={isOpen}
         aria-controls="main-navigation"
       >
-        <AnimatePresence mode="wait">
+        <span ref={toggleIconRef} style={{ display: "inline-flex" }}>
           {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <X size={24} aria-hidden="true" />
-            </motion.div>
+            <X size={24} aria-hidden="true" />
           ) : (
-            <motion.div
-              key="menu"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Menu size={24} aria-hidden="true" />
-            </motion.div>
+            <Menu size={24} aria-hidden="true" />
           )}
-        </AnimatePresence>
-      </motion.button>
+        </span>
+      </button>
 
       {isOpen && (
         <div className="nav-backdrop" onClick={() => setIsOpen(false)} />
       )}
 
       <nav
+        ref={navRef}
         className={`vertical-nav ${isOpen ? "open" : ""}`}
         id="main-navigation"
         aria-label="Hoofdnavigatie"
       >
-        <motion.div
-          className="nav-brand"
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, delay: 0.1 }}
-        >
+        <div ref={brandRef} className="nav-brand">
           <Link href="/" aria-label="Ga naar homepage">
             <Image
               src="/assets/devriesesoftware.webp"
@@ -136,26 +135,16 @@ export default function Navigation() {
               priority
             />
           </Link>
-        </motion.div>
+        </div>
 
-        <motion.ul
-          className="nav-links"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          role="list"
-        >
+        <ul ref={linksRef} className="nav-links" role="list">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.path;
-
             return (
-              <motion.li
+              <li
                 key={item.path}
                 className={isActive ? "active" : ""}
-                variants={itemVariants}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
                 role="listitem"
               >
                 <Link
@@ -164,79 +153,54 @@ export default function Navigation() {
                   aria-label={`Ga naar ${item.label}`}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  <motion.div
-                    animate={
-                      isActive
-                        ? {
-                          rotate: [0, -5, 5, -5, 0],
-                          scale: [1, 1.1, 1],
-                        }
-                        : {}
-                    }
-                    transition={{
-                      duration: 0.5,
-                      repeat: isActive ? Infinity : 0,
-                      repeatDelay: 3,
-                    }}
-                  >
+                  <span className="nav-icon-wrap">
                     <Icon size={20} aria-hidden="true" />
-                  </motion.div>
+                  </span>
                   <span>{item.label}</span>
                 </Link>
-              </motion.li>
+              </li>
             );
           })}
-        </motion.ul>
+        </ul>
 
-        <motion.div
-          className="nav-footer"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, delay: 0.6 }}
-        >
+        <div ref={footerRef} className="nav-footer">
           <div
             className="social-links"
             role="list"
             aria-label="Social media links"
           >
-            <motion.a
+            <a
               href="https://www.facebook.com/devriesesoftware"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Bezoek onze Facebook pagina (opent in nieuw venster)"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.95 }}
               role="listitem"
               className="social-icon"
             >
               <Facebook size={20} aria-hidden="true" />
-            </motion.a>
-            <motion.a
+            </a>
+            <a
               href="https://github.com/Wout1107"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Bezoek onze GitHub pagina (opent in nieuw venster)"
-              whileHover={{ scale: 1.1, rotate: -5 }}
-              whileTap={{ scale: 0.95 }}
               role="listitem"
               className="social-icon"
             >
               <Github size={20} aria-hidden="true" />
-            </motion.a>
-            <motion.a
+            </a>
+            <a
               href="https://www.linkedin.com/in/wout-devriese-a0b460273/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Bezoek onze LinkedIn pagina (opent in nieuw venster)"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              whileTap={{ scale: 0.95 }}
               role="listitem"
               className="social-icon"
             >
               <Linkedin size={20} aria-hidden="true" />
-            </motion.a>
+            </a>
           </div>
-        </motion.div>
+        </div>
       </nav>
     </>
   );
