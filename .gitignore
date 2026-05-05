@@ -43,5 +43,10 @@ next-env.d.ts
 # Payload CMS
 payload.db
 payload.db-journal
+payload.db.backup
+payload.db.backup*
+*.db
+*.db-journal
+*.db.backup
 /media
 payload-types.ts
