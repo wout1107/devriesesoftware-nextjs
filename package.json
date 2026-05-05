@@ -13,7 +13,7 @@
     "docker:logs": "docker compose logs -f",
     "docker:dev": "docker compose --profile dev up dev",
     "docker:prod": "docker compose up app -d",
-    "seed": "tsx scripts/seed-seo-pages.ts"
+    "seed": "tsx scripts/seed-seo.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

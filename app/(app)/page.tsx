@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import {
   ArrowRight,
   Code,
@@ -13,6 +14,7 @@ import {
   Smartphone,
   ShoppingCart,
   Star,
+  MapPin,
 } from "lucide-react";
 import { useGSAP } from "@gsap/react";
 import { TechIcons, TechName } from "@/components/TechIcons";
@@ -426,6 +428,46 @@ export default function Home() {
             );
           })}
         </StaggerGroup>
+      </section>
+
+      <section className="local-section" aria-labelledby="local-heading">
+        <FadeUp className="local-header">
+          <div className="local-badge">
+            <MapPin size={14} aria-hidden="true" />
+            <span>Lokaal aanwezig in heel Vlaanderen</span>
+          </div>
+          <h2 id="local-heading">Web developer in jouw regio</h2>
+          <p>Bekijk onze diensten per stad of bekijk een specifiek vakgebied.</p>
+        </FadeUp>
+
+        <FadeUp delay={0.1}>
+          <div className="local-services-grid">
+            {[
+              { slug: "website-laten-maken", label: "Website laten maken" },
+              { slug: "webshop-laten-maken", label: "Webshop laten maken" },
+              { slug: "webapplicatie-laten-maken", label: "Webapplicatie" },
+              { slug: "app-ontwikkeling", label: "App ontwikkeling" },
+              { slug: "software-op-maat", label: "Software op maat" },
+              { slug: "seo-optimalisatie", label: "SEO optimalisatie" },
+            ].map((s) => (
+              <Link key={s.slug} href={`/${s.slug}`} className="local-service-card">
+                <span>{s.label}</span>
+                <ArrowRight size={16} />
+              </Link>
+            ))}
+          </div>
+        </FadeUp>
+
+        <FadeUp delay={0.2}>
+          <div className="local-cities">
+            <span className="local-cities-label">Populaire steden:</span>
+            {["tielt", "brugge", "gent", "kortrijk", "roeselare", "antwerpen", "leuven", "hasselt"].map((c) => (
+              <Link key={c} href={`/regio/${c}`} className="local-city-pill">
+                {c.charAt(0).toUpperCase() + c.slice(1)}
+              </Link>
+            ))}
+          </div>
+        </FadeUp>
       </section>
 
       <section

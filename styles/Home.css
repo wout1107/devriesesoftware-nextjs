@@ -872,3 +872,115 @@
   font-family: "Inter";
   font-display: swap;
 }
+/* ============================================
+   LOCAL SEO SECTION
+   ============================================ */
+.local-section {
+  padding: var(--spacing-xl) var(--spacing-md);
+  background: var(--color-beige);
+  text-align: center;
+}
+
+.local-header {
+  max-width: 720px;
+  margin: 0 auto var(--spacing-lg);
+}
+
+.local-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #e5e0d8;
+  color: var(--color-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.local-badge svg {
+  color: var(--color-accent);
+}
+
+.local-section h2 {
+  margin-bottom: 0.75rem;
+}
+
+.local-section p {
+  color: #5a6655;
+}
+
+.local-services-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  max-width: 960px;
+  margin: 0 auto var(--spacing-lg);
+}
+
+@media (min-width: 768px) {
+  .local-services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.local-service-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.4rem;
+  background: #fff;
+  border: 1px solid #e5e0d8;
+  border-radius: 14px;
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.local-service-card:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 107, 0, 0.1);
+}
+
+.local-cities {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.local-cities-label {
+  color: #5a6655;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.local-city-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #e5e0d8;
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.local-city-pill:hover {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
