@@ -1,75 +1,97 @@
 # ================================
 # DEVRIESE SOFTWARE - DOCKERFILE
-# Multi-stage build for optimal image size
+# Multi-stage build with Payload seed at build + runtime
 # ================================
 
-# ---- Base Stage ----
 FROM node:20-alpine AS base
 
-# Install dependencies only when needed
+# ---- Dependencies ----
 FROM base AS deps
 RUN apk add --no-cache libc6-compat python3 make g++
 WORKDIR /app
-
-# Copy package files
 COPY package.json package-lock.json* ./
-
-# Install dependencies with clean install
 RUN npm ci --legacy-peer-deps
-
-# Install libsql for Alpine (musl)
 RUN npm install @libsql/linux-x64-musl --legacy-peer-deps || echo "libsql already installed"
 
-# ---- Builder Stage ----
+# ---- Builder ----
 FROM base AS builder
 WORKDIR /app
-
-# Copy dependencies from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Disable Next.js telemetry during build
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV DATABASE_URI=file:/app/payload.db
+ENV PAYLOAD_SECRET=build-time-secret-change-at-runtime
 
-# Build the application
+# Seed first so generateStaticParams + sitemap have data to read
+RUN npx tsx scripts/seed-seo.ts
+
+# Now build with populated DB
 RUN npm run build
 
-# ---- Production Stage ----
+# ---- Runner ----
 FROM base AS runner
 WORKDIR /app
+RUN apk add --no-cache libc6-compat
 
-# Set production environment
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Create non-root user for security
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Create directories for Payload CMS data persistence
-# Create directories for Payload CMS data persistence
 RUN mkdir -p .next data media public
 RUN chown -R nextjs:nodejs .next data media public
 
-# Copy all necessary files from builder
+# Copy build output
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+COPY --from=builder --chown=nextjs:nodejs /app/payload.config.ts ./payload.config.ts
+COPY --from=builder --chown=nextjs:nodejs /app/collections ./collections
+COPY --from=builder --chown=nextjs:nodejs /app/components ./components
+COPY --from=builder --chown=nextjs:nodejs /app/lib ./lib
+COPY --from=builder --chown=nextjs:nodejs /app/app ./app
+COPY --from=builder --chown=nextjs:nodejs /app/styles ./styles
 
-# Copy node_modules with libsql
+# Copy build-time seeded DB as bootstrap default
+COPY --from=builder --chown=nextjs:nodejs /app/payload.db ./payload.db.seed
+
+# Copy node_modules with libsql + tsx
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules ./node_modules
 
-# Switch to non-root user
+# Entrypoint: bootstrap volume DB if empty, then re-seed, then start
+COPY --chown=nextjs:nodejs <<'EOF' /app/entrypoint.sh
+#!/bin/sh
+set -e
+
+DB_PATH="${DATABASE_URI#file:}"
+echo "[entrypoint] DB path: $DB_PATH"
+
+# Bootstrap volume on first run
+if [ ! -f "$DB_PATH" ]; then
+  echo "[entrypoint] No DB at $DB_PATH — bootstrapping from seed..."
+  mkdir -p "$(dirname "$DB_PATH")"
+  cp /app/payload.db.seed "$DB_PATH"
+  chmod 644 "$DB_PATH"
+fi
+
+# Re-run seed at every boot to upsert content (idempotent)
+echo "[entrypoint] Running seed (upsert content)..."
+node_modules/.bin/tsx scripts/seed-seo.ts || echo "[entrypoint] Seed failed — continuing with existing data"
+
+echo "[entrypoint] Starting Next.js..."
+exec node_modules/.bin/next start
+EOF
+
+RUN chmod +x /app/entrypoint.sh
+
 USER nextjs
 
-# Expose port
 EXPOSE 3000
-
-# Set hostname
 ENV HOSTNAME="0.0.0.0"
 ENV PORT=3000
 
-# Start the application with Next.js
-CMD ["node_modules/.bin/next", "start"]
+CMD ["/app/entrypoint.sh"]

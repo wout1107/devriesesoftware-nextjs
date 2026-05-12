@@ -4,7 +4,8 @@ import configPromise from '@payload-config'
 
 const SITE_URL = 'https://devriesesoftware.be'
 
-export const revalidate = 86400
+export const revalidate = 3600
+export const dynamic = 'force-dynamic'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const now = new Date()
