@@ -1,13 +1,12 @@
 import { MetadataRoute } from 'next'
-import { getPayload } from 'payload'
-import configPromise from '@payload-config'
+import { services } from '@/scripts/data/services'
+import { cities } from '@/scripts/data/cities'
 
 const SITE_URL = 'https://devriesesoftware.be'
 
-export const revalidate = 3600
-export const dynamic = 'force-dynamic'
+export const revalidate = 86400
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
     const now = new Date()
 
     const staticEntries: MetadataRoute.Sitemap = [
@@ -22,45 +21,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { url: `${SITE_URL}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     ]
 
-    let dynamic: MetadataRoute.Sitemap = []
-    try {
-        const payload = await getPayload({ config: configPromise })
-        const [services, cities, localPages] = await Promise.all([
-            payload.find({ collection: 'services', limit: 100 }),
-            payload.find({ collection: 'cities', limit: 200 }),
-            payload.find({ collection: 'local-pages', depth: 2, limit: 1000 }),
-        ])
+    const serviceHubs: MetadataRoute.Sitemap = services.map((s) => ({
+        url: `${SITE_URL}/${s.slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.85,
+    }))
 
-        for (const s of services.docs as any[]) {
-            dynamic.push({
-                url: `${SITE_URL}/${s.slug}`,
-                lastModified: new Date(s.updatedAt || now),
-                changeFrequency: 'monthly',
-                priority: 0.85,
-            })
-        }
-        for (const c of cities.docs as any[]) {
-            dynamic.push({
-                url: `${SITE_URL}/regio/${c.slug}`,
-                lastModified: new Date(c.updatedAt || now),
-                changeFrequency: 'monthly',
-                priority: 0.7,
-            })
-        }
-        for (const p of localPages.docs as any[]) {
-            const svc = typeof p.service === 'object' ? p.service?.slug : null
-            const city = typeof p.city === 'object' ? p.city?.slug : null
-            if (!svc || !city) continue
-            dynamic.push({
-                url: `${SITE_URL}/${svc}/${city}`,
-                lastModified: new Date(p.updatedAt || now),
+    const regionHubs: MetadataRoute.Sitemap = cities.map((c) => ({
+        url: `${SITE_URL}/regio/${c.slug}`,
+        lastModified: now,
+        changeFrequency: 'monthly',
+        priority: 0.7,
+    }))
+
+    const localPages: MetadataRoute.Sitemap = []
+    for (const s of services) {
+        for (const c of cities) {
+            localPages.push({
+                url: `${SITE_URL}/${s.slug}/${c.slug}`,
+                lastModified: now,
                 changeFrequency: 'monthly',
                 priority: 0.6,
             })
         }
-    } catch (err) {
-        console.warn('sitemap: Payload unavailable, returning static only', err)
     }
 
-    return [...staticEntries, ...dynamic]
+    return [...staticEntries, ...serviceHubs, ...regionHubs, ...localPages]
 }
