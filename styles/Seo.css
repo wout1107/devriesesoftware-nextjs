@@ -1031,3 +1031,25 @@
     padding: 1.5rem;
   }
 }
+
+/* Lokale kenmerk-chips (unieke stadscontent) */
+.seo__chips {
+    list-style: none;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.seo__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    background: var(--color-white, #f4f8f5);
+    border: 2px solid var(--color-light-gray, #e5f0ea);
+    color: var(--color-primary, #424633);
+    font-size: 0.9rem;
+    font-weight: 600;
+}

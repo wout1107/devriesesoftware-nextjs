@@ -12,6 +12,7 @@ import { Projects } from './collections/Projects'
 import { Services } from './collections/Services'
 import { Cities } from './collections/Cities'
 import { LocalPages } from './collections/LocalPages'
+import { Posts } from './collections/Posts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -39,7 +40,7 @@ export default buildConfig({
             },
         },
     },
-    collections: [Users, Media, Projects, Services, Cities, LocalPages],
+    collections: [Users, Media, Projects, Services, Cities, LocalPages, Posts],
     editor: lexicalEditor(),
     secret: process.env.PAYLOAD_SECRET || 'CHANGE-THIS-SECRET-IN-PRODUCTION',
     typescript: {

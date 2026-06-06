@@ -1,4 +1,6 @@
 import { MetadataRoute } from 'next'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 import { services } from '@/scripts/data/services'
 import { cities } from '@/scripts/data/cities'
 
@@ -6,11 +8,33 @@ const SITE_URL = 'https://devriesesoftware.be'
 
 export const revalidate = 86400
 
-export default function sitemap(): MetadataRoute.Sitemap {
+async function getBlogEntries(now: Date): Promise<MetadataRoute.Sitemap> {
+    try {
+        const payload = await getPayload({ config: configPromise })
+        const { docs } = await payload.find({
+            collection: 'posts',
+            where: { status: { equals: 'published' } },
+            limit: 1000,
+            depth: 0,
+        })
+        return docs.map((p: any) => ({
+            url: `${SITE_URL}/blog/${p.slug}`,
+            lastModified: p.updatedAt ? new Date(p.updatedAt) : now,
+            changeFrequency: 'monthly' as const,
+            priority: 0.6,
+        }))
+    } catch {
+        return []
+    }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const now = new Date()
 
     const staticEntries: MetadataRoute.Sitemap = [
         { url: SITE_URL, lastModified: now, changeFrequency: 'weekly', priority: 1.0 },
+        { url: `${SITE_URL}/over-ons`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
+        { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
         { url: `${SITE_URL}/services`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
         { url: `${SITE_URL}/portfolio`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
         { url: `${SITE_URL}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
@@ -47,5 +71,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
         }
     }
 
-    return [...staticEntries, ...serviceHubs, ...regionHubs, ...localPages]
+    const blogEntries = await getBlogEntries(now)
+
+    return [
+        ...staticEntries,
+        ...serviceHubs,
+        ...regionHubs,
+        ...localPages,
+        ...blogEntries,
+    ]
 }

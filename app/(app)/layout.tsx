@@ -6,6 +6,11 @@ import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import ScrollToTop from "@/components/ScrollToTop";
 import SmoothScrollProvider from "@/components/animations/SmoothScrollProvider";
+import {
+  jsonLdScript,
+  organizationJsonLd,
+  websiteJsonLd,
+} from "@/lib/seo/jsonLd";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -75,6 +80,14 @@ export default function RootLayout({
   return (
     <html lang="nl">
       <body className={`${inter.variable} ${poppins.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(organizationJsonLd())}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(websiteJsonLd())}
+        />
         <ScrollToTop />
         <Navigation />
         <SmoothScrollProvider>

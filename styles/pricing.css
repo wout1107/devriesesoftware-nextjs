@@ -1331,3 +1331,659 @@
     padding: 0.25rem 0.6rem;
   }
 }
+
+/* ============================================
+   CONFIGURATOR
+   ============================================ */
+.configurator {
+  display: grid;
+  grid-template-columns: minmax(300px, 360px) 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  max-width: 1400px;
+  margin: 0 auto clamp(4rem, 8vw, 6rem);
+}
+
+/* Samenvatting links plaatsen */
+.config-summary {
+  order: -1;
+}
+
+.configurator-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.config-block {
+  background: var(--color-white);
+  border: 2px solid var(--color-light-gray);
+  border-radius: 20px;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.config-step-head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.config-step-num {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b00, #ff8533);
+  color: #fff;
+  font-weight: 700;
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.config-step-head h3 {
+  font-size: 1.4rem;
+  color: var(--color-primary);
+  margin: 0;
+}
+
+/* Radio cards (basis + onderhoud) */
+.config-radio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 1rem;
+}
+
+.config-radio-card {
+  position: relative;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1.25rem;
+  border-radius: 14px;
+  border: 2px solid var(--color-light-gray);
+  background: var(--color-beige);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.config-radio-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+}
+
+.config-radio-card.selected {
+  border-color: var(--color-accent);
+  background: #fff;
+  box-shadow: 0 6px 22px rgba(255, 107, 0, 0.18);
+}
+
+.config-card-title {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 1.1rem;
+}
+
+.config-card-price {
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.config-card-per {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  opacity: 0.7;
+  margin-left: 0.15rem;
+}
+
+.config-card-desc {
+  font-size: 0.92rem;
+  color: var(--color-text);
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.config-pill {
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Module groups */
+.config-module-group + .config-module-group {
+  margin-top: 1.75rem;
+}
+
+.config-group-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.9rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.config-group-label svg {
+  color: var(--color-accent);
+}
+
+.config-toggle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.85rem;
+}
+
+.config-toggle-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  text-align: left;
+  padding: 1rem 1.1rem;
+  border-radius: 12px;
+  border: 2px solid var(--color-light-gray);
+  background: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  width: 100%;
+}
+
+.config-toggle-card:hover {
+  border-color: var(--color-accent);
+}
+
+.config-toggle-card.active {
+  border-color: var(--color-accent);
+  background: var(--color-beige);
+}
+
+.config-check {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid var(--color-light-gray);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-top: 2px;
+  transition: var(--transition);
+}
+
+.config-toggle-card.active .config-check {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.config-toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.config-toggle-title {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.config-toggle-desc {
+  font-size: 0.88rem;
+  color: var(--color-text);
+  opacity: 0.78;
+  line-height: 1.45;
+}
+
+.config-toggle-price {
+  font-weight: 700;
+  color: var(--color-accent);
+  font-size: 0.92rem;
+  margin-top: 0.15rem;
+}
+
+/* Stepper */
+.config-stepper {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.config-stepper button {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 2px solid var(--color-light-gray);
+  background: #fff;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.config-stepper button:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.config-stepper button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.config-stepper-value {
+  min-width: 22px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+/* SEO list */
+.config-seo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.config-seo-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+  padding: 1.15rem 1.25rem;
+  border-radius: 14px;
+  border: 2px solid var(--color-light-gray);
+  background: #fff;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  width: 100%;
+}
+
+.config-seo-card:hover {
+  border-color: var(--color-accent);
+}
+
+.config-seo-card.selected {
+  border-color: var(--color-accent);
+  box-shadow: 0 6px 22px rgba(255, 107, 0, 0.15);
+}
+
+.config-seo-card.highlight {
+  background: linear-gradient(135deg, rgba(255, 107, 0, 0.06), rgba(255, 133, 51, 0.04));
+  border-color: rgba(255, 107, 0, 0.35);
+}
+
+.config-seo-radio {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--color-light-gray);
+  background: #fff;
+  transition: var(--transition);
+  position: relative;
+}
+
+.config-seo-card.selected .config-seo-radio {
+  border-color: var(--color-accent);
+}
+
+.config-seo-card.selected .config-seo-radio::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.config-seo-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.config-seo-title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.config-seo-title svg {
+  color: var(--color-accent);
+}
+
+.config-seo-desc {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+.config-seo-price {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+/* Summary (links, vaste balk onderaan neemt de CTA over) */
+
+.config-summary-inner {
+  background: var(--color-white);
+  border: 2px solid var(--color-light-gray);
+  border-radius: 20px;
+  padding: 1.75rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.config-summary-inner h3 {
+  font-size: 1.3rem;
+  color: var(--color-primary);
+  margin-bottom: 1.25rem;
+}
+
+.config-summary-lines {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.config-summary-lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.config-summary-lines li span:last-child {
+  font-weight: 700;
+  color: var(--color-primary);
+  white-space: nowrap;
+}
+
+.config-summary-total {
+  border-top: 2px dashed var(--color-light-gray);
+  padding-top: 1.1rem;
+  margin-bottom: 1.25rem;
+}
+
+.config-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  color: var(--color-primary);
+}
+
+.config-total-row strong {
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  font-size: 1.9rem;
+  color: var(--color-accent);
+}
+
+.config-total-row.monthly {
+  margin-top: 0.5rem;
+}
+
+.config-total-row.monthly strong {
+  font-size: 1.2rem;
+  color: var(--color-primary);
+}
+
+.config-total-note {
+  font-size: 0.82rem;
+  color: var(--color-text);
+  opacity: 0.65;
+}
+
+/* In-paneel knop verborgen — de vaste balk onderaan handelt de offerte af */
+.config-cta {
+  display: none;
+}
+
+.config-disclaimer {
+  font-size: 0.82rem;
+  color: var(--color-text);
+  opacity: 0.7;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+}
+
+/* ============================================
+   PROGRAMMATIC SEO HIGHLIGHT
+   ============================================ */
+.seo-highlight {
+  max-width: 1400px;
+  margin: 0 auto clamp(4rem, 8vw, 6rem);
+}
+
+.seo-highlight-inner {
+  background: linear-gradient(135deg, #424633, #2e3126);
+  border-radius: 28px;
+  padding: clamp(2.5rem, 5vw, 4rem);
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(66, 70, 51, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.seo-highlight-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #ff6b00, #ff8533);
+  color: #fff;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 10px 30px rgba(255, 107, 0, 0.35);
+}
+
+.seo-highlight-inner h2 {
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.seo-highlight-lead {
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 720px;
+  margin: 0 auto 2.5rem;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.seo-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.seo-point {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+  text-align: left;
+}
+
+.seo-point svg {
+  color: var(--color-accent);
+  margin-bottom: 0.85rem;
+}
+
+.seo-point h4 {
+  color: #fff;
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+}
+
+.seo-point p {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.seo-highlight-price {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 1.25rem 2.5rem;
+}
+
+.seo-highlight-price span:first-child {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.seo-highlight-price strong {
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  font-size: 2.5rem;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.seo-highlight-price-note {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+}
+
+/* ============================================
+   VASTE ACTIEBALK (totaal + offerte-knop) — alle schermen
+   sticky werkt niet door overflow op .main-content, dus
+   gebruiken we een fixed balk die altijd meegaat bij scrollen
+   ============================================ */
+.config-mobilebar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 200;
+  padding: 1rem clamp(1rem, 3vw, 2.5rem);
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  background: var(--color-white);
+  border-top: 2px solid var(--color-light-gray);
+  box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Op desktop schuift de nav-sidebar (320px) ernaast */
+@media (min-width: 769px) {
+  .config-mobilebar {
+    left: var(--sidebar-width);
+  }
+}
+
+.config-mobilebar-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.config-mobilebar-price {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.config-mobilebar-label {
+  font-size: 0.75rem;
+  color: var(--color-text);
+  opacity: 0.7;
+}
+
+.config-mobilebar-price strong {
+  font-family: var(--font-heading), var(--font-heading-fallback);
+  font-size: 1.5rem;
+  color: var(--color-accent);
+}
+
+.config-mobilebar-monthly {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  opacity: 0.8;
+}
+
+.config-mobilebar-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  padding: 0.9rem 1.75rem;
+}
+
+/* Ruimte zodat de vaste balk niets afdekt */
+.pricing-page {
+  padding-bottom: 110px;
+}
+
+/* ============================================
+   CONFIGURATOR RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .configurator {
+    grid-template-columns: 1fr;
+  }
+
+  /* Volledig paneel bovenaan */
+  .config-summary {
+    order: -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .config-toggle-grid,
+  .config-radio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .config-seo-card {
+    flex-wrap: wrap;
+  }
+
+  .config-seo-price {
+    margin-left: 0;
+  }
+}

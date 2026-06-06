@@ -1,20 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Check,
   Plus,
+  Minus,
   Rocket,
   Code,
   Settings,
-  ShoppingCart,
   HelpCircle,
   Layers,
   Globe,
   RefreshCw,
   Zap,
-  Package,
+  SlidersHorizontal,
+  TrendingUp,
+  Search,
+  MapPin,
+  Sparkles,
   ArrowRight,
 } from "lucide-react";
 import FadeUp from "@/components/animations/FadeUp";
@@ -23,106 +27,210 @@ import SplitTextReveal from "@/components/animations/SplitTextReveal";
 import MagneticButton from "@/components/animations/MagneticButton";
 import "../../../styles/pricing.css";
 
-const packages = [
+// ── Configurator data ──────────────────────────────────────────────
+type BaseOption = {
+  id: string;
+  label: string;
+  desc: string;
+  price: number;
+  popular?: boolean;
+};
+
+type ModuleItem = {
+  id: string;
+  label: string;
+  desc: string;
+  price: number;
+  qty?: boolean;
+  max?: number;
+  unit?: string;
+};
+
+const baseOptions: BaseOption[] = [
   {
-    name: "Essential",
-    price: "1.250",
-    description:
-      "De perfecte start voor zelfstandigen die meteen professioneel voor de dag willen komen.",
-    subtitle:
-      "Tech: Next.js (Razendsnel). CMS: Ingebouwd Visueel CMS (Eenvoudig teksten/foto's aanpassen zonder technische kennis).",
-    timeline: "1 - 2 weken",
-    maintenance: "€25/maand",
-    color: "#424633",
-    badge: "Perfect voor starters",
-    popular: false,
-    features: [
-      "Onepager of max. 3 pagina's",
-      "Contactformulier & Google Maps",
-      "Basis SEO-setup (Google Indexatie)",
-      "Oplevering binnen 1 - 2 weken",
-    ],
-    maintenanceFeatures: [
-      "Beveiligingsupdates",
-      "Kleine aanpassingen (1x/maand)",
-      "Basis support per mail",
-      "Hosting inbegrepen",
-    ],
+    id: "onepager",
+    label: "Onepager",
+    desc: "Eén krachtige pagina waarop alles samenkomt. Ideaal om snel professioneel online te staan.",
+    price: 950,
   },
   {
-    name: "Business Growth",
-    price: "2.450",
-    description:
-      "Voor KMO's die topposities in Google willen en leads willen genereren.",
-    subtitle:
-      "Tech: Next.js + Geavanceerde optimalisatie. CMS: Gebruiksvriendelijk CMS (Volledig beheer van pagina's, blogs en teamleden).",
-    timeline: "2 - 3 weken",
-    maintenance: "€40/maand",
-    color: "#FF6B00",
-    badge: "Meest gekozen",
+    id: "multi",
+    label: "Meerdere pagina's",
+    desc: "Tot 4 pagina's (home, over ons, diensten, contact …). De meest gekozen basis.",
+    price: 1850,
     popular: true,
-    features: [
-      "Tot 8 unieke pagina's",
-      "Blog / Nieuws module",
-      "Analytics Dashboard (Privacy-vriendelijk)",
-      "Call-to-Action optimalisatie",
-      "Oplevering binnen 2 - 3 weken",
-    ],
-    maintenanceFeatures: [
-      "Beveiligingsupdates",
-      "Kleine aanpassingen (2x/maand)",
-      "E-mail & telefonische support",
-      "Hosting inbegrepen",
-    ],
   },
   {
-    name: "Custom Headless",
-    price: "3.950",
-    pricePrefix: "Vanaf",
-    description:
-      "Voor merken die geen compromissen sluiten. Maatwerk, animaties en complexe data.",
-    subtitle:
-      "Tech: Enterprise Headless Architectuur. CMS: Strapi CMS (Volledig modulair database beheer).",
-    timeline: "4+ weken",
-    maintenance: "€65/maand",
-    color: "#424633",
-    badge: "Voor professionals",
-    popular: false,
-    features: [
-      "Volledig maatwerk (Pixel-perfect design implementatie)",
-      "Custom Animaties (GSAP)",
-      "Meertaligheid (Multi-language setup)",
-      "Koppelingen (CRM, API's, ...)",
-      "Oplevering binnen 4+ weken",
-    ],
-    maintenanceFeatures: [
-      "Inclusief VPS Hosting & Database beheer",
-      "Onbeperkte kleine updates",
-      "Prioritaire support",
-      "Contentbeheer support",
-      "Dagelijkse Backups",
-    ],
+    id: "pro",
+    label: "Uitgebreide website",
+    desc: "Tot 10 pagina's met geavanceerde structuur, klaar om mee te groeien.",
+    price: 2400,
   },
 ];
 
+const moduleGroups: { title: string; icon: typeof Layers; items: ModuleItem[] }[] =
+  [
+    {
+      title: "Content & Beheer",
+      icon: Layers,
+      items: [
+        {
+          id: "cms",
+          label: "Eigen CMS",
+          desc: "Zelf teksten en foto's aanpassen, zonder technische kennis.",
+          price: 450,
+        },
+        {
+          id: "blog",
+          label: "Blog / nieuws module",
+          desc: "Deel updates en versterk meteen je SEO.",
+          price: 250,
+        },
+        {
+          id: "lang",
+          label: "Extra taal",
+          desc: "Bereik internationale klanten.",
+          price: 250,
+          qty: true,
+          max: 5,
+          unit: "taal",
+        },
+      ],
+    },
+    {
+      title: "Functionaliteit",
+      icon: Settings,
+      items: [
+        {
+          id: "forms",
+          label: "Geavanceerd formulier",
+          desc: "Meerstaps of met bijlagen en automatische mails.",
+          price: 200,
+        },
+        {
+          id: "booking",
+          label: "Reservatie / boekingssysteem",
+          desc: "Laat klanten online afspraken of plaatsen boeken.",
+          price: 600,
+        },
+        {
+          id: "shop",
+          label: "Webshop (tot 20 producten)",
+          desc: "Volledige verkoopomgeving inclusief betaalsysteem.",
+          price: 1250,
+        },
+      ],
+    },
+    {
+      title: "Design & Beleving",
+      icon: Zap,
+      items: [
+        {
+          id: "anim",
+          label: "Custom animaties (GSAP)",
+          desc: "Scroll-reveals en micro-interacties die indruk maken.",
+          price: 400,
+        },
+        {
+          id: "photo",
+          label: "Fotografie & beeld",
+          desc: "Professionele beelden of zorgvuldig gekozen stockfoto's.",
+          price: 300,
+        },
+        {
+          id: "newsletter",
+          label: "Nieuwsbrief koppeling",
+          desc: "Integratie met Mailchimp of Brevo.",
+          price: 150,
+        },
+      ],
+    },
+  ];
+
+type SeoOption = {
+  id: string;
+  label: string;
+  desc: string;
+  price: number;
+  tag?: string;
+  highlight?: boolean;
+};
+
+const seoOptions: SeoOption[] = [
+  {
+    id: "basis",
+    label: "Basis SEO",
+    desc: "Google-indexatie, nette meta-tags en een sitemap.",
+    price: 0,
+    tag: "Inbegrepen",
+  },
+  {
+    id: "boost",
+    label: "SEO Boost",
+    desc: "Diepgaande optimalisatie: structured data, snelheid, interne linking en zoekwoordonderzoek.",
+    price: 450,
+  },
+  {
+    id: "programmatic",
+    label: "Programmatic SEO — 200+ pagina's",
+    desc: "Automatisch gegenereerde landingspagina's (dienst × regio) die je zichtbaarheid en voorvertoningen in Google fors laten stijgen.",
+    price: 1950,
+    highlight: true,
+  },
+];
+
+type MaintenanceOption = {
+  id: string;
+  label: string;
+  desc: string;
+  price: number;
+  popular?: boolean;
+};
+
+const maintenanceOptions: MaintenanceOption[] = [
+  {
+    id: "none",
+    label: "Geen onderhoud",
+    desc: "Je beheert de site volledig zelf.",
+    price: 0,
+  },
+  {
+    id: "basic",
+    label: "Basis",
+    desc: "Beveiligingsupdates, backups en mail-support.",
+    price: 25,
+  },
+  {
+    id: "pro",
+    label: "Pro",
+    desc: "Alles van Basis + prioritaire support en maandelijkse aanpassingen.",
+    price: 40,
+    popular: true,
+  },
+];
+
+const allModules = moduleGroups.flatMap((g) => g.items);
+
+const eur = (n: number) => new Intl.NumberFormat("nl-BE").format(n);
+
+// ── Maatwerk + FAQ data ────────────────────────────────────────────
 const customFeatures = [
   {
     icon: Layers,
     title: "Headless Architectuur",
     description:
-      "Ontkoppelde frontend (Next.js) en backend (Strapi) voor maximale veiligheid en snelheid",
+      "Ontkoppelde frontend (Next.js) en backend voor maximale veiligheid en snelheid",
   },
   {
     icon: Globe,
-    title: "Dual-Brand Systemen",
+    title: "Multi-Brand Systemen",
     description:
       "Beheer meerdere merken of websites vanuit één centraal dashboard",
   },
   {
     icon: Zap,
     title: "High-End Experience",
-    description:
-      "Custom animaties (GSAP), scroll-reveals en micro-interacties",
+    description: "Custom animaties (GSAP), scroll-reveals en micro-interacties",
   },
   {
     icon: RefreshCw,
@@ -133,138 +241,478 @@ const customFeatures = [
 
 const faqs = [
   {
-    question: "Wat is inbegrepen in de onderhoudspakketten?",
+    question: "Hoe werkt de configurator precies?",
     answer:
-      "Onze onderhoudspakketten bevatten beveiligingsupdates, technische support, kleine aanpassingen en regelmatige backups om uw website veilig en up-to-date te houden.",
+      "Je kiest een basispakket en vinkt de modules aan die je nodig hebt. De prijs links wordt meteen bijgewerkt, zodat je altijd weet waar je aan toe bent. De prijs is een richtprijs — na een kort gesprek bevestig ik alles in een offerte op maat.",
   },
   {
-    question: "Kan ik later upgraden naar een hoger pakket?",
+    question: "Wat is het Programmatic SEO-pakket?",
     answer:
-      "Ja, u kunt altijd upgraden. We berekenen alleen het verschil tussen de pakketten en zorgen voor een soepele overgang.",
+      "Daarmee maak ik in één keer 200 of meer landingspagina's aan, opgebouwd uit combinaties van je diensten en regio's (bv. 'webshop laten maken in Brugge'). Elke pagina is uniek en geoptimaliseerd, waardoor je in veel meer zoekopdrachten verschijnt en je voorvertoningen in Google stijgen. Ideaal voor lokale vindbaarheid.",
   },
   {
-    question: "Hoe lang duurt het ontwikkelproces?",
+    question: "Zijn de prijzen inclusief BTW?",
     answer:
-      "Dit varieert per pakket: Starter (1 week), Business (1,5-2 weken), Premium (2-3 weken). Complexere projecten en Custom Development hebben een aangepaste tijdlijn.",
+      "Nee, alle prijzen zijn exclusief 21% BTW. De eenmalige bouwprijs betaal je bij oplevering, het onderhoud is een maandelijks bedrag.",
+  },
+  {
+    question: "Kan ik later modules toevoegen?",
+    answer:
+      "Zeker. De website wordt modulair gebouwd, dus je kan altijd later extra functionaliteiten of pagina's toevoegen.",
+  },
+  {
+    question: "Is hosting inbegrepen?",
+    answer:
+      "Hosting, technisch beheer en monitoring zitten in de maandelijkse onderhoudspakketten (Basis en Pro). Kies je geen onderhoud, dan bespreken we de hosting apart.",
   },
   {
     question: "Krijg ik eigendom van de broncode?",
     answer:
-      "Ja, na volledige betaling krijgt u volledige eigendom van alle broncode en bestanden van uw website.",
-  },
-  {
-    question: "Wat betekent Strapi CMS?",
-    answer:
-      "Strapi is een open source CMS waarmee u zelf uw website-inhoud kunt beheren zonder technische kennis. De meerkost van €500 dekt onze tijd en expertise voor de integratie.",
-  },
-  {
-    question: "Is hosting inbegrepen in de prijzen?",
-    answer:
-      "Ja, de webhosting is volledig inbegrepen in onze maandelijkse onderhoudspakketten. U hoeft zich geen zorgen te maken over het apart regelen van hosting - wij zorgen voor snelle, betrouwbare hosting, inclusief het technisch beheer en monitoring van uw website.",
+      "Ja, na volledige betaling krijg je de volledige eigendom van alle broncode en bestanden van je website.",
   },
 ];
 
 export default function Pricing() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
   const router = useRouter();
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Configurator state
+  const [base, setBase] = useState<string>("multi");
+  const [modules, setModules] = useState<Record<string, number>>({});
+  const [seo, setSeo] = useState<string>("basis");
+  const [maint, setMaint] = useState<string>("basic");
+
+  const toggleModule = (item: ModuleItem) => {
+    setModules((prev) => {
+      const next = { ...prev };
+      if (next[item.id]) delete next[item.id];
+      else next[item.id] = 1;
+      return next;
+    });
+  };
+
+  const setQty = (item: ModuleItem, delta: number) => {
+    setModules((prev) => {
+      const current = prev[item.id] ?? 0;
+      const max = item.max ?? 99;
+      const value = Math.min(max, Math.max(0, current + delta));
+      const next = { ...prev };
+      if (value === 0) delete next[item.id];
+      else next[item.id] = value;
+      return next;
+    });
+  };
+
+  const { oneTime, monthly, lineItems } = useMemo(() => {
+    const lines: { label: string; amount: number }[] = [];
+
+    const baseOpt = baseOptions.find((b) => b.id === base);
+    if (baseOpt) lines.push({ label: baseOpt.label, amount: baseOpt.price });
+
+    for (const item of allModules) {
+      const qty = modules[item.id];
+      if (!qty) continue;
+      const amount = item.price * qty;
+      lines.push({
+        label: item.qty ? `${item.label} ×${qty}` : item.label,
+        amount,
+      });
+    }
+
+    const seoOpt = seoOptions.find((s) => s.id === seo);
+    if (seoOpt && seoOpt.price > 0)
+      lines.push({ label: seoOpt.label, amount: seoOpt.price });
+
+    const oneTimeTotal = lines.reduce((sum, l) => sum + l.amount, 0);
+    const maintOpt = maintenanceOptions.find((m) => m.id === maint);
+
+    return {
+      oneTime: oneTimeTotal,
+      monthly: maintOpt?.price ?? 0,
+      lineItems: lines,
+    };
+  }, [base, modules, seo, maint]);
+
+  const requestConfig = () => {
+    const baseOpt = baseOptions.find((b) => b.id === base);
+    const maintOpt = maintenanceOptions.find((m) => m.id === maint);
+    const seoOpt = seoOptions.find((s) => s.id === seo);
+    const hasShop = !!modules["shop"];
+
+    // Projecttype afstemmen op de selectie
+    const projectType = hasShop ? "ecommerce" : "website";
+
+    // Budget-bereik afleiden uit het eenmalige totaal
+    const budget =
+      oneTime < 1000
+        ? "500-1000"
+        : oneTime < 2500
+          ? "1000-2500"
+          : oneTime < 5000
+            ? "2500-5000"
+            : oneTime < 10000
+              ? "5000-10000"
+              : "10000+";
+
+    // Leesbare samenvatting voor het berichtveld
+    const moduleLines = lineItems
+      .filter((l) => l.label !== baseOpt?.label)
+      .map((l) => `   • ${l.label} — €${eur(l.amount)}`);
+
+    const message = [
+      "── Offerte-aanvraag via configurator ──",
+      "",
+      `Basispakket: ${baseOpt?.label ?? "-"} — €${eur(baseOpt?.price ?? 0)}`,
+      moduleLines.length
+        ? `Gekozen opties:\n${moduleLines.join("\n")}`
+        : "Gekozen opties: geen",
+      `SEO-aanpak: ${seoOpt?.label ?? "-"}${
+        seoOpt && seoOpt.price > 0 ? ` — €${eur(seoOpt.price)}` : " (inbegrepen)"
+      }`,
+      `Onderhoud: ${maintOpt?.label ?? "Geen"}${
+        monthly ? ` — €${monthly}/maand` : ""
+      }`,
+      "",
+      `Eenmalig totaal: €${eur(oneTime)} excl. btw`,
+      monthly ? `Maandelijks onderhoud: €${monthly}/maand excl. btw` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    const payload = { v: 1, projectType, budget, message };
+
+    try {
+      sessionStorage.setItem("ds_config", JSON.stringify(payload));
+    } catch {
+      // sessionStorage geblokkeerd — val terug op query param
+    }
+    router.push(`/contact?config=${encodeURIComponent(message)}`);
+  };
 
   return (
     <div className="pricing-page">
       <FadeUp className="pricing-header">
         <div className="header-icon-wrapper">
-          <Package size={48} className="header-icon" />
+          <SlidersHorizontal size={48} className="header-icon" />
         </div>
-        <h1>Website Pakketten</h1>
+        <h1>Stel je website samen</h1>
         <p>
-          Transparante prijzen voor professionele websites. Alle prijzen zijn
-          exclusief BTW.
+          Bouw je eigen pakket met de configurator hieronder en zie meteen wat
+          het kost. Alle prijzen zijn exclusief BTW.
         </p>
       </FadeUp>
 
-      <StaggerGroup
-        className="pricing-grid-centered"
-        stagger={0.12}
-        y={32}
-        duration={0.85}
-      >
-        {packages.map((pkg, index) => (
-          <div
-            key={index}
-            className={`pricing-card-centered ${pkg.popular ? "popular" : ""}`}
-            style={{ "--package-color": pkg.color } as React.CSSProperties}
-          >
-            {pkg.popular && (
-              <div className="popular-badge-new">⭐ {pkg.badge}</div>
-            )}
-            {!pkg.popular && <div className="badge-new">{pkg.badge}</div>}
-            <div className="pricing-card-header-centered">
-              <h3>{pkg.name}</h3>
-              <div className="price-wrapper-centered">
-                {pkg.pricePrefix && (
-                  <span className="price-prefix">{pkg.pricePrefix}</span>
-                )}
-                <span className="currency">€</span>
-                <span className="price">{pkg.price}</span>
-              </div>
-              <p className="tax-note">excl. btw</p>
+      {/* ── CONFIGURATOR ───────────────────────────────────────── */}
+      <section className="configurator">
+        <div className="configurator-options">
+          {/* Stap 1: basis */}
+          <FadeUp className="config-block">
+            <div className="config-step-head">
+              <span className="config-step-num">1</span>
+              <h3>Kies je basis</h3>
             </div>
-            <div className="description-section">
-              <p className="package-description-new">{pkg.description}</p>
-              <p className="package-subtitle">{pkg.subtitle}</p>
+            <div className="config-radio-grid">
+              {baseOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={`config-radio-card ${base === opt.id ? "selected" : ""}`}
+                  onClick={() => setBase(opt.id)}
+                  aria-pressed={base === opt.id}
+                >
+                  {opt.popular && (
+                    <span className="config-pill">Meest gekozen</span>
+                  )}
+                  <span className="config-card-title">{opt.label}</span>
+                  <span className="config-card-price">€{eur(opt.price)}</span>
+                  <span className="config-card-desc">{opt.desc}</span>
+                </button>
+              ))}
             </div>
-            <div className="package-features-centered">
-              <div className="features-header">
-                <Check size={20} className="features-header-icon" />
-                <h4>Inbegrepen:</h4>
-              </div>
-              <ul>
-                {pkg.features.map((feature, i) => (
-                  <li key={i}>
-                    <Check size={18} />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
+          </FadeUp>
+
+          {/* Stap 2: modules */}
+          <FadeUp className="config-block">
+            <div className="config-step-head">
+              <span className="config-step-num">2</span>
+              <h3>Voeg modules toe</h3>
             </div>
-            <div className="maintenance-section-new">
-              <div className="maintenance-header">
-                <Zap size={20} className="maintenance-icon" />
-                <h4>
-                  Onderhoudsoptie: <span>{pkg.maintenance}</span>
-                </h4>
+            {moduleGroups.map((group) => {
+              const Icon = group.icon;
+              return (
+                <div key={group.title} className="config-module-group">
+                  <div className="config-group-label">
+                    <Icon size={18} />
+                    <span>{group.title}</span>
+                  </div>
+                  <div className="config-toggle-grid">
+                    {group.items.map((item) => {
+                      const qty = modules[item.id] ?? 0;
+                      const active = qty > 0;
+                      if (item.qty) {
+                        return (
+                          <div
+                            key={item.id}
+                            className={`config-toggle-card ${active ? "active" : ""}`}
+                          >
+                            <div className="config-toggle-info">
+                              <span className="config-toggle-title">
+                                {item.label}
+                              </span>
+                              <span className="config-toggle-desc">
+                                {item.desc}
+                              </span>
+                              <span className="config-toggle-price">
+                                +€{eur(item.price)} per {item.unit}
+                              </span>
+                            </div>
+                            <div className="config-stepper">
+                              <button
+                                type="button"
+                                onClick={() => setQty(item, -1)}
+                                aria-label={`Minder ${item.label}`}
+                                disabled={qty === 0}
+                              >
+                                <Minus size={16} />
+                              </button>
+                              <span className="config-stepper-value">{qty}</span>
+                              <button
+                                type="button"
+                                onClick={() => setQty(item, 1)}
+                                aria-label={`Meer ${item.label}`}
+                                disabled={qty >= (item.max ?? 99)}
+                              >
+                                <Plus size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          className={`config-toggle-card ${active ? "active" : ""}`}
+                          onClick={() => toggleModule(item)}
+                          aria-pressed={active}
+                        >
+                          <span className="config-check">
+                            {active && <Check size={14} />}
+                          </span>
+                          <div className="config-toggle-info">
+                            <span className="config-toggle-title">
+                              {item.label}
+                            </span>
+                            <span className="config-toggle-desc">
+                              {item.desc}
+                            </span>
+                            <span className="config-toggle-price">
+                              +€{eur(item.price)}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </FadeUp>
+
+          {/* Stap 3: SEO */}
+          <FadeUp className="config-block">
+            <div className="config-step-head">
+              <span className="config-step-num">3</span>
+              <h3>Kies je SEO-aanpak</h3>
+            </div>
+            <div className="config-seo-list">
+              {seoOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={`config-seo-card ${seo === opt.id ? "selected" : ""} ${
+                    opt.highlight ? "highlight" : ""
+                  }`}
+                  onClick={() => setSeo(opt.id)}
+                  aria-pressed={seo === opt.id}
+                >
+                  <span className="config-seo-radio" />
+                  <div className="config-seo-info">
+                    <span className="config-seo-title">
+                      {opt.highlight && <TrendingUp size={16} />}
+                      {opt.label}
+                    </span>
+                    <span className="config-seo-desc">{opt.desc}</span>
+                  </div>
+                  <span className="config-seo-price">
+                    {opt.price === 0 ? "Inbegrepen" : `+€${eur(opt.price)}`}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </FadeUp>
+
+          {/* Stap 4: onderhoud */}
+          <FadeUp className="config-block">
+            <div className="config-step-head">
+              <span className="config-step-num">4</span>
+              <h3>Onderhoud &amp; hosting</h3>
+            </div>
+            <div className="config-radio-grid">
+              {maintenanceOptions.map((opt) => (
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={`config-radio-card ${maint === opt.id ? "selected" : ""}`}
+                  onClick={() => setMaint(opt.id)}
+                  aria-pressed={maint === opt.id}
+                >
+                  {opt.popular && <span className="config-pill">Aanbevolen</span>}
+                  <span className="config-card-title">{opt.label}</span>
+                  <span className="config-card-price">
+                    {opt.price === 0 ? "€0" : `€${opt.price}`}
+                    <span className="config-card-per">/maand</span>
+                  </span>
+                  <span className="config-card-desc">{opt.desc}</span>
+                </button>
+              ))}
+            </div>
+          </FadeUp>
+        </div>
+
+        {/* Live summary */}
+        <FadeUp className="config-summary" as="aside">
+          <div className="config-summary-inner">
+            <h3>Jouw configuratie</h3>
+            <ul className="config-summary-lines">
+              {lineItems.map((l, i) => (
+                <li key={i}>
+                  <span>{l.label}</span>
+                  <span>€{eur(l.amount)}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="config-summary-total">
+              <div className="config-total-row">
+                <span>Eenmalig</span>
+                <strong>€{eur(oneTime)}</strong>
               </div>
-              <ul>
-                {pkg.maintenanceFeatures.map((feature, i) => (
-                  <li key={i}>
-                    <Check size={16} />
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
+              <span className="config-total-note">excl. btw</span>
+              {monthly > 0 && (
+                <div className="config-total-row monthly">
+                  <span>Onderhoud</span>
+                  <strong>€{monthly}/mnd</strong>
+                </div>
+              )}
             </div>
             <MagneticButton
-              onClick={() => router.push("/contact")}
-              className="btn-primary btn-large select-package-btn"
+              className="btn-primary btn-large config-cta"
+              onClick={requestConfig}
+              ariaLabel="Vraag deze configuratie aan"
             >
               <ArrowRight size={20} />
-              <span>Kies {pkg.name}</span>
+              <span>Vraag deze offerte aan</span>
             </MagneticButton>
+            <p className="config-disclaimer">
+              Richtprijs — je ontvangt een definitieve offerte na een kort,
+              vrijblijvend gesprek.
+            </p>
           </div>
-        ))}
-      </StaggerGroup>
+        </FadeUp>
+      </section>
 
+      {/* Vaste actiebalk: totaal + offerte-knop (altijd zichtbaar) */}
+      <div className="config-mobilebar">
+        <div className="config-mobilebar-inner">
+          <div className="config-mobilebar-price">
+            <span className="config-mobilebar-label">Totaal excl. btw</span>
+            <strong>
+              €{eur(oneTime)}
+              {monthly > 0 && (
+                <span className="config-mobilebar-monthly">
+                  {" "}
+                  + €{monthly}/mnd
+                </span>
+              )}
+            </strong>
+          </div>
+          <button
+            type="button"
+            className="btn-primary config-mobilebar-btn"
+            onClick={requestConfig}
+            aria-label="Vraag deze offerte aan"
+          >
+            <ArrowRight size={18} />
+            <span>Offerte aanvragen</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ── PROGRAMMATIC SEO HIGHLIGHT ─────────────────────────── */}
+      <section className="seo-highlight">
+        <FadeUp className="seo-highlight-inner">
+          <div className="seo-highlight-badge">
+            <TrendingUp size={28} />
+          </div>
+          <SplitTextReveal as="h2" type="words" stagger={0.05}>
+            Programmatic SEO: 200+ pagina's in één pakket
+          </SplitTextReveal>
+          <p className="seo-highlight-lead">
+            Domineer de lokale zoekresultaten. Ik genereer honderden unieke,
+            geoptimaliseerde landingspagina's die elke combinatie van jouw
+            diensten en regio's afdekken — zodat je verschijnt waar je klanten
+            écht zoeken.
+          </p>
+          <StaggerGroup className="seo-highlight-grid" stagger={0.1} y={24}>
+            <div className="seo-point">
+              <Search size={28} />
+              <h4>Meer zoekwoorden</h4>
+              <p>
+                Elke pagina mikt op een specifieke zoekopdracht, goed voor een
+                veelvoud aan vindbare termen.
+              </p>
+            </div>
+            <div className="seo-point">
+              <MapPin size={28} />
+              <h4>Lokale dominantie</h4>
+              <p>
+                Dienst × regio-pagina's (bv. &quot;webshop laten maken in
+                Brugge&quot;) trekken gericht lokaal verkeer aan.
+              </p>
+            </div>
+            <div className="seo-point">
+              <Sparkles size={28} />
+              <h4>Sterkere previews</h4>
+              <p>
+                Nette titels, meta-beschrijvingen en structured data laten je
+                voorvertoningen in Google opvallen.
+              </p>
+            </div>
+          </StaggerGroup>
+          <div className="seo-highlight-price">
+            <span>Voeg toe vanaf</span>
+            <strong>€1.950</strong>
+            <span className="seo-highlight-price-note">
+              eenmalig · 200+ pagina's
+            </span>
+          </div>
+        </FadeUp>
+      </section>
+
+      {/* ── MAATWERK ───────────────────────────────────────────── */}
       <section className="custom-development-section-full">
         <FadeUp className="custom-dev-header-full">
           <div className="custom-header-icon-wrapper">
             <Code size={56} className="custom-header-icon" />
           </div>
           <SplitTextReveal as="h2" type="words" stagger={0.05}>
-            Enterprise & Maatwerk Solutions
+            Maatwerk &amp; Enterprise
           </SplitTextReveal>
           <p className="custom-intro-full">
-            Voor organisaties met complexe behoeften, meerdere merken of
-            geavanceerde data-architectuur. Wij bouwen schaalbare applicaties
-            die klaar zijn voor de toekomst.
+            Heb je nood aan een complexe webapplicatie, meerdere merken of een
+            geavanceerde data-architectuur? Dan groeien we voorbij de
+            configurator. Ik bouw schaalbare oplossingen die klaar zijn voor de
+            toekomst.
           </p>
 
           <StaggerGroup className="custom-features-grid" stagger={0.1} y={24}>
@@ -283,7 +731,7 @@ export default function Pricing() {
           <FadeUp className="custom-pricing-box" delay={0.1}>
             <div className="custom-price-info">
               <Code size={48} className="custom-box-icon" />
-              <h3>Enterprise & Maatwerk</h3>
+              <h3>Maatwerkproject</h3>
               <div className="custom-price-options">
                 <div className="price-option">
                   <span className="price-label">Projectbasis:</span>
@@ -298,7 +746,7 @@ export default function Pricing() {
               <div className="maintenance-note-wrapper">
                 <Zap size={20} className="maintenance-note-icon" />
                 <p className="maintenance-note">
-                  <strong>Hosting & Security:</strong> €55 - €85/maand
+                  <strong>Hosting &amp; Security:</strong> €55 - €85/maand
                 </p>
               </div>
               <p className="delivery-note">
@@ -311,191 +759,13 @@ export default function Pricing() {
               onClick={() => router.push("/contact")}
             >
               <Rocket size={20} />
-              <span>Vraag offerte aan.</span>
+              <span>Vraag offerte aan</span>
             </MagneticButton>
           </FadeUp>
         </FadeUp>
       </section>
 
-      <section className="extensions-section-redesigned">
-        <FadeUp className="extensions-header-redesigned">
-          <div className="extensions-icon-badge">
-            <Plus size={32} className="extensions-header-icon" />
-          </div>
-          <SplitTextReveal as="h2" type="words" stagger={0.05}>
-            Uitbreidingen & Modules
-          </SplitTextReveal>
-          <p className="extensions-subtitle">
-            Breid uw website uit met krachtige extra functionaliteiten. Alle
-            prijzen zijn exclusief BTW.
-          </p>
-        </FadeUp>
-
-        <div className="extensions-categories">
-          <FadeUp className="extension-category">
-            <div className="category-header">
-              <Settings size={24} className="category-icon" />
-              <h3>Basis Functionaliteiten</h3>
-            </div>
-            <div className="category-grid">
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>Extra Pagina&apos;s (Advanced)</h4>
-                  <p className="extension-description">
-                    Pagina&apos;s met custom designblokken en CMS-integratie
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">€180</span>
-                    <span className="price-unit">per stuk</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>Meertaligheid</h4>
-                  <p className="extension-description">
-                    Bereik internationale klanten met meerdere talen
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">€250</span>
-                    <span className="price-unit">per taal</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>Blogmodule (statisch)</h4>
-                  <p className="extension-description">
-                    Deel nieuws en updates via een statische blog
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">€150</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="extension-card highlighted">
-                <div className="extension-badge">Populair</div>
-                <div className="extension-card-content">
-                  <h4>Strapi CMS</h4>
-                  <p className="extension-description">
-                    Bestaande site ombouwen naar een beheersbare omgeving
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">€1.950</span>
-                    <span className="price-unit">
-                      Enterprise Architecture
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FadeUp>
-
-          <FadeUp className="extension-category" delay={0.1}>
-            <div className="category-header">
-              <ShoppingCart size={24} className="category-icon" />
-              <h3>E-commerce & Verkoop</h3>
-            </div>
-            <div className="category-grid">
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>Webshop basis</h4>
-                  <p className="extension-description">
-                    Tot 20 producten, inclusief betaalsysteem
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">€1.250</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>Uitgebreide webshop</h4>
-                  <p className="extension-description">
-                    100+ producten met geavanceerd beheer
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">vanaf €2.000</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>Smart Content Modules</h4>
-                  <p className="extension-description">
-                    Vacaturebank, projectportfolio of nieuwsmodule met filtering
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">vanaf €450</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FadeUp>
-
-          <FadeUp className="extension-category" delay={0.15}>
-            <div className="category-header">
-              <Zap size={24} className="category-icon" />
-              <h3>Marketing & Optimalisatie</h3>
-            </div>
-            <div className="category-grid">
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>Nieuwsbrief koppeling</h4>
-                  <p className="extension-description">
-                    Mailchimp of Brevo integratie
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">€150</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>SEO-boostpakket</h4>
-                  <p className="extension-description">
-                    Inclusief meta-tags en optimalisatie
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">€200</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="extension-card">
-                <div className="extension-card-content">
-                  <h4>Fotografie + stockfoto&apos;s</h4>
-                  <p className="extension-description">
-                    Professionele beelden voor uw website
-                  </p>
-                  <div className="extension-price-tag">
-                    <span className="price-amount">vanaf €300</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </FadeUp>
-        </div>
-
-        <FadeUp className="extensions-info-box">
-          <HelpCircle size={24} className="info-icon" />
-          <div className="info-content">
-            <h4>Niet gevonden wat u zoekt?</h4>
-            <p>
-              Neem contact op voor een vrijblijvende offerte op maat. We denken
-              graag met u mee over de beste oplossing voor uw specifieke
-              behoeften.
-            </p>
-          </div>
-        </FadeUp>
-      </section>
-
+      {/* ── FAQ ────────────────────────────────────────────────── */}
       <section className="faq-section">
         <FadeUp className="faq-header">
           <h2>Veelgestelde Vragen</h2>
@@ -525,6 +795,7 @@ export default function Pricing() {
         </StaggerGroup>
       </section>
 
+      {/* ── CTA ────────────────────────────────────────────────── */}
       <section className="pricing-cta">
         <FadeUp className="pricing-cta-content">
           <SplitTextReveal as="h2" type="words" stagger={0.05}>

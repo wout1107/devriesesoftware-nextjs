@@ -6,9 +6,11 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import {
   Home,
+  User,
   Briefcase,
   FolderOpen,
   DollarSign,
+  Newspaper,
   Mail,
   Menu,
   X,
@@ -22,8 +24,10 @@ import "../styles/Navigation.css";
 
 const navItems = [
   { path: "/", icon: Home, label: "Home" },
+  { path: "/over-ons", icon: User, label: "Over ons" },
   { path: "/services", icon: Briefcase, label: "Diensten" },
   { path: "/portfolio", icon: FolderOpen, label: "Portfolio" },
+  { path: "/blog", icon: Newspaper, label: "Blog" },
   { path: "/pricing", icon: DollarSign, label: "Prijzen" },
   { path: "/contact", icon: Mail, label: "Contact" },
 ];

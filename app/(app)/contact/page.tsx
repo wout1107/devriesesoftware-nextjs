@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Mail,
   Phone,
@@ -59,6 +59,48 @@ export default function Contact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+
+  // Velden voorinvullen wanneer men vanuit de configurator komt
+  useEffect(() => {
+    let raw: string | null = null;
+    try {
+      raw = sessionStorage.getItem("ds_config");
+      if (raw) sessionStorage.removeItem("ds_config");
+    } catch {
+      // sessionStorage niet beschikbaar
+    }
+
+    // Gestructureerde payload (JSON) heeft voorrang
+    if (raw) {
+      try {
+        const parsed = JSON.parse(raw) as {
+          projectType?: string;
+          budget?: string;
+          message?: string;
+        };
+        setFormData((prev) => ({
+          ...prev,
+          projectType: prev.projectType || parsed.projectType || "website",
+          budget: prev.budget || parsed.budget || "",
+          message: prev.message || parsed.message || "",
+        }));
+        return;
+      } catch {
+        // geen JSON — val terug op platte tekst hieronder
+      }
+    }
+
+    // Fallback: platte tekst uit sessionStorage of query (?config=)
+    const text =
+      raw ?? new URLSearchParams(window.location.search).get("config");
+    if (text) {
+      setFormData((prev) => ({
+        ...prev,
+        projectType: prev.projectType || "website",
+        message: prev.message || text,
+      }));
+    }
+  }, []);
 
   const pageRef = useRef<HTMLDivElement | null>(null);
   const headerIconRef = useRef<HTMLDivElement | null>(null);

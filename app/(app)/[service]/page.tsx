@@ -43,11 +43,25 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!svc) return { title: 'Pagina niet gevonden' }
     const url = `${SITE_URL}/${service}`
     const title = `${svc.name} in heel Vlaanderen | Devriese Software`
+    const ogImage = `/api/og?service=${encodeURIComponent(svc.shortLabel || svc.name)}`
     return {
         title,
         description: svc.shortDescription,
         alternates: { canonical: url },
-        openGraph: { title, description: svc.shortDescription, url, type: 'website', locale: 'nl_BE' },
+        openGraph: {
+            title,
+            description: svc.shortDescription,
+            url,
+            type: 'website',
+            locale: 'nl_BE',
+            images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description: svc.shortDescription,
+            images: [ogImage],
+        },
     }
 }
 

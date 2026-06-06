@@ -84,6 +84,46 @@ export function serviceJsonLd(opts: {
     }
 }
 
+export const SOCIAL_PROFILES = [
+    'https://www.facebook.com/devriesesoftware',
+    'https://github.com/Wout1107',
+    'https://www.linkedin.com/in/wout-devriese-a0b460273/',
+]
+
+export function organizationJsonLd() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        '@id': `${SITE_URL}/#organization`,
+        name: COMPANY.name,
+        legalName: COMPANY.legalName,
+        url: SITE_URL,
+        logo: COMPANY.logo,
+        image: COMPANY.logo,
+        email: COMPANY.email,
+        telephone: COMPANY.telephone,
+        vatID: COMPANY.vatID,
+        address: {
+            '@type': 'PostalAddress',
+            ...COMPANY.address,
+        },
+        founder: { '@type': 'Person', name: 'Wout Devriese' },
+        sameAs: SOCIAL_PROFILES,
+    }
+}
+
+export function websiteJsonLd() {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        '@id': `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: COMPANY.name,
+        inLanguage: 'nl-BE',
+        publisher: { '@id': `${SITE_URL}/#organization` },
+    }
+}
+
 export function faqJsonLd(faqs: Faq[]) {
     return {
         '@context': 'https://schema.org',

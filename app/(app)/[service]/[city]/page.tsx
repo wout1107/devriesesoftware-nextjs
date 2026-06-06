@@ -27,6 +27,7 @@ import {
     localBusinessJsonLd,
     serviceJsonLd,
 } from '@/lib/seo/jsonLd'
+import { getCityContent } from '@/scripts/data/cityContent'
 import '@/styles/Seo.css'
 
 interface PageProps {
@@ -75,6 +76,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const page = await loadPage(service, city)
     if (!page) return { title: 'Pagina niet gevonden' }
     const url = `${SITE_URL}/${service}/${city}`
+    const svc: any = page.service
+    const cty: any = page.city
+    const ogImage = `/api/og?service=${encodeURIComponent(
+        svc?.shortLabel || 'Web development',
+    )}&city=${encodeURIComponent(cty?.name || '')}`
     return {
         title: page.metaTitle,
         description: page.metaDescription,
@@ -86,11 +92,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             type: 'website',
             locale: 'nl_BE',
             siteName: 'Devriese Software',
+            images: [
+                {
+                    url: ogImage,
+                    width: 1200,
+                    height: 630,
+                    alt: `${svc?.shortLabel || 'Web development'} in ${cty?.name || 'Vlaanderen'}`,
+                },
+            ],
         },
         twitter: {
             card: 'summary_large_image',
             title: page.metaTitle,
             description: page.metaDescription,
+            images: [ogImage],
         },
     }
 }
@@ -141,6 +156,7 @@ export default async function ServiceCityPage({ params }: PageProps) {
 
     const url = `${SITE_URL}/${service}/${city}`
     const provinceLabel = PROVINCE_LABELS[cty.province as string] || cty.province
+    const cityInfo = getCityContent(cty.slug)
 
     const localBusiness = localBusinessJsonLd({
         serviceName: svc.shortLabel,
@@ -336,6 +352,48 @@ export default async function ServiceCityPage({ params }: PageProps) {
                     </div>
                 </div>
             </section>
+
+            {/* Lokale context — uniek per stad */}
+            {cityInfo && (
+                <section className="seo__section seo__section--beige">
+                    <div className="seo__container seo__container--narrow">
+                        <FadeUp>
+                            <div className="seo__section-header">
+                                <span className="seo__eyebrow">
+                                    <MapPin size={14} />
+                                    Ondernemen in {cty.name}
+                                </span>
+                                <h2 className="seo__h2">
+                                    {svc.shortLabel} voor bedrijven in {cty.name}
+                                </h2>
+                            </div>
+                        </FadeUp>
+                        <FadeUp delay={0.1}>
+                            <p className="seo__body seo__body--large">{cityInfo.profile}</p>
+                        </FadeUp>
+                        <FadeUp delay={0.15}>
+                            <p className="seo__body">
+                                Het lokale ondernemersweefsel — {cityInfo.economy.toLowerCase()} — vraagt
+                                om een website die snel laadt, vlot gevonden wordt in Google en
+                                vertrouwen wekt bij wie in {cty.name} en omgeving zoekt. Daar bouwen
+                                we als lokale partner ({cty.distanceFromKanegem} km van Kanegem)
+                                jouw {svc.shortLabel.toLowerCase()} op af.
+                            </p>
+                        </FadeUp>
+                        {cityInfo.knownFor.length > 0 && (
+                            <FadeUp delay={0.2}>
+                                <ul className="seo__chips" aria-label={`Kenmerken van ${cty.name}`}>
+                                    {cityInfo.knownFor.map((k) => (
+                                        <li key={k} className="seo__chip">
+                                            {k}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </FadeUp>
+                        )}
+                    </div>
+                </section>
+            )}
 
             {/* Testimonial */}
             {page.testimonialQuote && (

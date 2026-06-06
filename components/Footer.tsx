@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin, FileText, Shield, Cookie } from "lucide-react";
+import { Mail, Phone, MapPin, FileText, Shield, Cookie, User, Newspaper } from "lucide-react";
 import "../styles/Footer.css";
 
 export default function Footer() {
@@ -84,6 +84,18 @@ export default function Footer() {
           <div className="footer-col footer-legal-col">
             <h4 className="footer-subtitle">Juridisch</h4>
             <ul className="footer-links">
+              <li>
+                <Link href="/over-ons">
+                  <User size={16} />
+                  <span>Over ons</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog">
+                  <Newspaper size={16} />
+                  <span>Blog &amp; nieuws</span>
+                </Link>
+              </li>
               <li>
                 <Link href="/privacy">
                   <Shield size={16} />
