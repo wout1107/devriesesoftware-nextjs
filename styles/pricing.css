@@ -1907,12 +1907,7 @@
   box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Op desktop schuift de nav-sidebar (320px) ernaast */
-@media (min-width: 769px) {
-  .config-mobilebar {
-    left: var(--sidebar-width);
-  }
-}
+/* Sidebar verwijderd → balk over volledige breedte */
 
 .config-mobilebar-inner {
   display: flex;

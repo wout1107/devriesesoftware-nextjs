@@ -1,0 +1,265 @@
+/* ============================================
+   MENU PANEL (side overlay, Mugen / brutalist)
+   ============================================ */
+:root {
+    --menu-bg: #1c1f16; /* bijna-zwart olijfgroen, donkerder dan de sidebar was */
+    --menu-fg: #f4f8f5;
+    --menu-muted: #8a937f; /* gedempt grijs-groen */
+    --menu-mono: ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
+}
+
+.menu-root {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+}
+
+/* Backdrop */
+.menu-backdrop {
+    position: fixed;
+    inset: 0;
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: rgba(16, 18, 12, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    cursor: pointer;
+}
+
+/* Panel */
+.menu-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    height: 100dvh;
+    width: min(520px, 100%);
+    background: var(--menu-bg);
+    color: var(--menu-fg);
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.5rem, 4vw, 2.75rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.35);
+}
+
+.menu-mono {
+    font-family: var(--menu-mono);
+}
+
+/* Head */
+.menu-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: clamp(2rem, 6vh, 3.5rem);
+}
+
+.menu-eyebrow {
+    font-size: 0.78rem;
+    letter-spacing: 0.4em;
+    color: var(--menu-muted);
+}
+
+.menu-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(244, 248, 245, 0.18);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--menu-fg);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.menu-close:hover,
+.menu-close:focus-visible {
+    background: var(--color-accent, #ff6b00);
+    border-color: var(--color-accent, #ff6b00);
+    color: #fff;
+    outline: none;
+}
+
+/* Nav */
+.menu-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-nav-line {
+    overflow: hidden; /* mask voor de "tekst rolt omhoog"-reveal */
+}
+
+.menu-nav-mask-inner {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+}
+
+.menu-nav-link {
+    display: inline-block;
+    font-family: var(--font-heading), "Poppins", sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: clamp(2rem, 7vw, 3rem);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    color: var(--menu-fg);
+    text-decoration: none;
+    padding: 0.12em 0;
+    transition: color 0.2s ease, transform 0.25s ease;
+}
+
+.menu-nav-link.is-active,
+.menu-nav-link:hover,
+.menu-nav-link:focus-visible {
+    color: var(--color-accent, #ff6b00);
+    outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .menu-nav-link:hover,
+    .menu-nav-link:focus-visible {
+        transform: translateX(8px);
+    }
+}
+
+.menu-nav-badge {
+    font-size: 0.85rem;
+    color: var(--menu-muted);
+    font-weight: 500;
+}
+
+/* Dividers */
+.menu-divider {
+    height: 1px;
+    background: rgba(244, 248, 245, 0.12);
+    margin: clamp(1.5rem, 4vh, 2.25rem) 0;
+}
+
+/* Blocks */
+.menu-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.menu-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    color: var(--menu-muted);
+}
+
+/* E-mail als marker-blok: donkere tekst op oranje, geen radius */
+.menu-email {
+    align-self: flex-start;
+    background: var(--color-accent, #ff6b00);
+    color: #1c1f16;
+    font-family: var(--font-heading), "Poppins", sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+    padding: 0.3rem 0.6rem;
+    border-radius: 0;
+    text-decoration: none;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+}
+
+.menu-email:hover {
+    color: #1c1f16;
+    background: #ff8533;
+}
+
+.menu-locale {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--menu-fg);
+    opacity: 0.85;
+    font-size: 0.95rem;
+}
+
+.menu-clock {
+    color: var(--menu-muted);
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+}
+
+/* Socials */
+.menu-socials {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem 1.25rem;
+}
+
+.menu-socials a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    color: var(--menu-fg);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    transition: color 0.2s ease;
+}
+
+.menu-socials a:hover,
+.menu-socials a:focus-visible {
+    color: var(--color-accent, #ff6b00);
+    outline: none;
+}
+
+.menu-social-idx {
+    color: var(--menu-muted);
+    font-size: 0.78rem;
+}
+
+/* Footer */
+.menu-foot {
+    margin-top: auto;
+    padding-top: clamp(1.5rem, 4vh, 2.25rem);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.menu-foot-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--menu-fg);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s ease;
+}
+
+.menu-foot-link:hover,
+.menu-foot-link:focus-visible {
+    color: var(--color-accent, #ff6b00);
+    outline: none;
+}
+
+.menu-copy {
+    color: var(--menu-muted);
+    font-size: 0.75rem;
+}
+
+/* Kleine schermen: socials onder elkaar, paneel-padding top voor de notch */
+@media (max-width: 420px) {
+    .menu-socials {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
+import { getPayload } from "payload";
+import configPromise from "@payload-config";
 import "./globals.css";
-import Navigation from "@/components/Navigation";
+import SiteHeader from "@/components/SiteHeader";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -11,6 +13,29 @@ import {
   organizationJsonLd,
   websiteJsonLd,
 } from "@/lib/seo/jsonLd";
+import type { NavCounts } from "@/lib/site/nav";
+
+// Counts max 1x per uur opnieuw ophalen (geen query per pageview)
+export const revalidate = 3600;
+
+async function getNavCounts(): Promise<NavCounts> {
+  try {
+    const payload = await getPayload({ config: configPromise });
+    const [portfolio, blog] = await Promise.all([
+      payload
+        .count({ collection: "projects" })
+        .then((r) => r.totalDocs)
+        .catch(() => null),
+      payload
+        .count({ collection: "posts", where: { status: { equals: "published" } } })
+        .then((r) => r.totalDocs)
+        .catch(() => null),
+    ]);
+    return { portfolio, blog };
+  } catch {
+    return { portfolio: null, blog: null };
+  }
+}
 
 const inter = Inter({
   subsets: ["latin"],
@@ -72,11 +97,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const counts = await getNavCounts();
   return (
     <html lang="nl">
       <body className={`${inter.variable} ${poppins.variable}`}>
@@ -89,7 +115,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={jsonLdScript(websiteJsonLd())}
         />
         <ScrollToTop />
-        <Navigation />
+        <SiteHeader counts={counts} />
         <SmoothScrollProvider>
           <div className="content-wrapper">{children}</div>
           <Footer />

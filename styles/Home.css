@@ -339,16 +339,13 @@
   font-size: 0.9rem;
 }
 
-/* Features Section */
+/* Features Section — donkergroene band (ritme) */
 .features {
-  padding: clamp(4rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem);
-  max-width: 1400px;
-  margin: clamp(4rem, 8vw, 6rem) auto 0;
-  background: linear-gradient(135deg,
-      #fafcfb 0%,
-      #f5f9f7 100%);
-  /* Zeer subtiele groene tint */
-  border-radius: 30px;
+  padding: clamp(4.5rem, 9vw, 7rem) clamp(2rem, 4vw, 3rem);
+  margin: clamp(3.5rem, 7vw, 5.5rem) 0 0;
+  background: linear-gradient(135deg, #424633 0%, #2e3126 100%);
+  border-radius: 0;
+  position: relative;
 }
 
 .features-title {
@@ -356,7 +353,7 @@
   font-size: clamp(2rem, 4vw, 2.75rem);
   margin-bottom: clamp(2rem, 4vw, 3.5rem);
   /* meer ruimte onder titel */
-  color: var(--color-primary);
+  color: #ffffff;
 }
 
 .features-grid {
@@ -877,8 +874,24 @@
    ============================================ */
 .local-section {
   padding: var(--spacing-xl) var(--spacing-md);
-  background: var(--color-beige);
+  background: linear-gradient(135deg, #2e3126 0%, #424633 100%);
   text-align: center;
+}
+
+.local-section h2 {
+  color: #ffffff;
+}
+
+.local-section p {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.local-cities-label {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.local-section .local-badge {
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .local-header {

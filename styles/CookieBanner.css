@@ -294,10 +294,10 @@
    RESPONSIVE DESIGN
    ============================================ */
 
-/* Desktop - Sidebar Layout */
+/* Desktop (sidebar verwijderd → full width) */
 @media (min-width: 769px) {
     .cookie-banner-overlay {
-        left: var(--sidebar-width, 320px);
+        left: 0;
         padding: 1.5rem;
     }
 }

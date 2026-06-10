@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Inter, Poppins } from 'next/font/google'
 import { ArrowRight, Compass, Home, MessageCircle } from 'lucide-react'
-import Navigation from '@/components/Navigation'
+import SiteHeader from '@/components/SiteHeader'
 import Footer from '@/components/Footer'
 import './(app)/globals.css'
 import '@/styles/NotFound.css'
@@ -44,7 +44,7 @@ export default function GlobalNotFound() {
     return (
         <html lang="nl">
             <body className={`${inter.variable} ${poppins.variable}`}>
-                <Navigation />
+                <SiteHeader counts={{ portfolio: null, blog: null }} />
                 <section className="nf">
                     <div className="nf__orbs" aria-hidden>
                         <span className="nf__orb nf__orb--green" />

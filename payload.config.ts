@@ -50,6 +50,9 @@ export default buildConfig({
         client: {
             url: process.env.DATABASE_URI || 'file:./payload.db',
         },
+        // Productie gebruikt migraties (zie /migrations). In dev synct Payload
+        // het schema nog automatisch (push), zodat lokaal werken vlot blijft.
+        migrationDir: path.resolve(dirname, 'migrations'),
     }),
     sharp,
 })

@@ -119,8 +119,21 @@ export default async function BlogIndex() {
                                                     className="blog__card-img"
                                                 />
                                             ) : (
-                                                <div className="blog__card-placeholder" aria-hidden>
-                                                    <span>DS</span>
+                                                <div
+                                                    className={`blog__card-placeholder cat-${post.category}`}
+                                                    aria-hidden
+                                                >
+                                                    <Image
+                                                        src="/DevrieseSoftwareRond.webp"
+                                                        alt=""
+                                                        width={72}
+                                                        height={72}
+                                                        className="blog__ph-logo"
+                                                    />
+                                                    <span className="blog__ph-cat">
+                                                        {CATEGORY_LABELS[post.category] ||
+                                                            post.category}
+                                                    </span>
                                                 </div>
                                             )}
                                             <span className="blog__card-cat">

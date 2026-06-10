@@ -14,7 +14,10 @@
     "docker:dev": "docker compose --profile dev up dev",
     "docker:prod": "docker compose up app -d",
     "seed": "tsx scripts/seed-seo.ts",
-    "seed:blog": "tsx scripts/seed-blog.ts"
+    "seed:blog": "tsx scripts/seed-blog.ts",
+    "payload": "payload",
+    "migrate": "tsx scripts/migrate.ts",
+    "migrate:create": "payload migrate:create"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -26,6 +29,7 @@
     "js-cookie": "^3.0.5",
     "lenis": "^1.3.23",
     "lucide-react": "^0.562.0",
+    "motion": "^12.40.0",
     "next": "^15.5.9",
     "payload": "^3.72.0",
     "react": "^19.2.3",

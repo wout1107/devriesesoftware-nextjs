@@ -1,0 +1,118 @@
+/* ============================================
+   SITE HEADER (overlay, sidebar vervangen)
+   Groene bar bovenaan die wegvaagt bij scrollen.
+   ============================================ */
+.site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(0.85rem, 2vw, 1.15rem) clamp(1rem, 3vw, 1.75rem);
+    /* Laat kliks door op de transparante zones (hero eronder) */
+    pointer-events: none;
+}
+
+.site-header > * {
+    pointer-events: auto;
+}
+
+/* Groene bar — alleen bovenaan zichtbaar, vervaagt bij scroll */
+.site-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, #424633 0%, #3a3e2c 100%);
+    border-bottom: 1px solid rgba(255, 107, 0, 0.25);
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    pointer-events: none;
+}
+
+.site-header.is-top::before {
+    opacity: 1;
+}
+
+/* Logo — ronde merkmark (groen/oranje) */
+.site-header-logo {
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+    position: relative;
+}
+
+.site-header-logo img {
+    width: clamp(40px, 7vw, 46px);
+    height: auto;
+    border-radius: 50%;
+    transition: box-shadow 0.45s ease, transform 0.25s ease;
+}
+
+/* Op wit (gescrolld): subtiele ring zodat het logo afgelijnd is */
+.site-header.is-scrolled .site-header-logo img {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .site-header-logo:hover img {
+        transform: scale(1.05);
+    }
+}
+
+/* Menu-trigger als pill */
+.site-header-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.6rem 1.1rem;
+    border: 1.5px solid var(--color-primary, #424633);
+    border-radius: 999px;
+    background: rgba(247, 250, 248, 0.72);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--color-primary, #424633);
+    font-family: var(--font-heading), "Poppins", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+        transform 0.25s ease;
+}
+
+/* Bovenaan op de groene bar: lichte variant */
+.site-header.is-top .site-header-menu-btn {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #f4f8f5;
+}
+
+.site-header.is-top .site-header-menu-btn:hover,
+.site-header.is-top .site-header-menu-btn:focus-visible {
+    background: var(--color-accent, #ff6b00);
+    border-color: var(--color-accent, #ff6b00);
+    color: #fff;
+}
+
+.site-header-menu-btn:hover,
+.site-header-menu-btn:focus-visible {
+    background: var(--color-accent, #ff6b00);
+    border-color: var(--color-accent, #ff6b00);
+    color: #fff;
+    outline: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .site-header-menu-btn:hover {
+        transform: translateY(-1px);
+    }
+}
+
+.site-header-menu-btn:focus-visible {
+    outline: 3px solid var(--color-accent, #ff6b00);
+    outline-offset: 3px;
+}

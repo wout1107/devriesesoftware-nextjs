@@ -30,6 +30,7 @@ export default function SmoothScrollProvider({ children, className }: Props) {
           touchMultiplier: 1.4,
         });
         lenisRef.current = lenis;
+        (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
 
         lenis.on("scroll", ScrollTrigger.update);
 
@@ -43,6 +44,7 @@ export default function SmoothScrollProvider({ children, className }: Props) {
           gsap.ticker.remove(tickerCallback);
           lenis.destroy();
           lenisRef.current = null;
+          delete (window as unknown as { __lenis?: Lenis }).__lenis;
         };
       }
     );

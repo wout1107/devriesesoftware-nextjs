@@ -49,6 +49,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
 COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
 COPY --from=builder --chown=nextjs:nodejs /app/scripts ./scripts
+COPY --from=builder --chown=nextjs:nodejs /app/migrations ./migrations
 COPY --from=builder --chown=nextjs:nodejs /app/payload.config.ts ./payload.config.ts
 COPY --from=builder --chown=nextjs:nodejs /app/collections ./collections
 COPY --from=builder --chown=nextjs:nodejs /app/components ./components
@@ -77,6 +78,10 @@ if [ ! -f "$DB_PATH" ]; then
   cp /app/payload.db.seed "$DB_PATH"
   chmod 644 "$DB_PATH"
 fi
+
+# Apply pending DB migrations (non-interactive, idempotent)
+echo "[entrypoint] Running migrations..."
+node_modules/.bin/tsx scripts/migrate.ts || echo "[entrypoint] Migration failed — continuing"
 
 # Re-run seed at every boot to upsert content (idempotent)
 echo "[entrypoint] Running seed (upsert content)..."
